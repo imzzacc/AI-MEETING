@@ -1,0 +1,98 @@
+{
+  "skills": [
+    {
+      "name": "xunzhi-repo-map",
+      "description": "Repository routing, API index, module entry points, and request-to-module mapping.",
+      "patterns": [
+        "admin/src/main/java/**/api/**",
+        "admin/src/main/java/**/*Controller.java",
+        "admin/src/main/resources/mapper/**",
+        "skills/xunzhi-repo-map/**"
+      ],
+      "keywords": ["Controller", "RequestMapping", "GetMapping", "PostMapping", "PutMapping", "DeleteMapping", "ServerEndpoint"]
+    },
+    {
+      "name": "xunzhi-auth-user",
+      "description": "Authentication, current user injection, permission checks, WebSocket token checks, and user data isolation.",
+      "patterns": [
+        "admin/src/main/java/**/auth/**",
+        "admin/src/main/java/**/user/**",
+        "admin/src/main/resources/application-satoken.yml",
+        "admin/src/main/resources/sql/t_user.sql",
+        "admin/src/main/resources/sql/admin_permission.sql",
+        "skills/xunzhi-auth-user/**"
+      ],
+      "keywords": ["CurrentUser", "SaToken", "StpUtil", "token", "isAdmin", "permission", "WebSocketAuth", "userId"]
+    },
+    {
+      "name": "xunzhi-interview-domain",
+      "description": "Interview session lifecycle, question generation, scoring, follow-up, restore, finalization, and workflow contracts.",
+      "patterns": [
+        "admin/src/main/java/**/interview/**",
+        "admin/src/main/resources/workflow/**",
+        "admin/src/main/resources/interview-followup-rule.yaml",
+        "admin/src/main/resources/liteflow/**",
+        "skills/xunzhi-interview-domain/**"
+      ],
+      "keywords": ["Interview", "questionNumber", "requestId", "followUp", "score", "workflow", "runtime", "snapshot", "finalize"]
+    },
+    {
+      "name": "xunzhi-agent-domain",
+      "description": "Generic Agent sessions, SSE chat, message history, file upload, agent properties, and scene binding.",
+      "patterns": [
+        "admin/src/main/java/**/agent/**",
+        "admin/src/main/resources/sql/agent_properties.sql",
+        "skills/xunzhi-agent-domain/**"
+      ],
+      "keywords": ["Agent", "sessionId", "SseEmitter", "agent-binding", "AgentProperties", "BusinessAgentScene"]
+    },
+    {
+      "name": "xunzhi-ai-runtime",
+      "description": "Runtime configuration, AI guard, singleflight, flow limit, thread pool, retries, and concurrency controls.",
+      "patterns": [
+        "admin/src/main/java/**/common/ratelimit/**",
+        "admin/src/main/java/**/common/config/**",
+        "admin/src/main/java/**/interview/application/guard/**",
+        "admin/src/main/java/**/interview/application/runtime/**",
+        "admin/src/main/resources/application.yaml",
+        "skills/xunzhi-ai-runtime/**"
+      ],
+      "keywords": ["singleflight", "flow-limit", "ai-guard", "thread-pool", "timeout", "retry", "Redis", "Redisson", "runtime"]
+    },
+    {
+      "name": "xunzhi-media-domain",
+      "description": "Realtime ASR, WebSocket media transport, TTS, audio services, and media notifications.",
+      "patterns": [
+        "admin/src/main/java/**/media/**",
+        "admin/src/main/java/**/streamingMedia/**",
+        "admin/src/main/java/**/toolkit/mediatools/**",
+        "admin/src/main/java/**/toolkit/xunfei/**",
+        "skills/xunzhi-media-domain/**"
+      ],
+      "keywords": ["Audio", "WebSocket", "TTS", "ASR", "Xunfei", "transcription", "speech"]
+    },
+    {
+      "name": "xunzhi-change-playbook",
+      "description": "Cross-domain change checklist for API, DTO, workflow, config, cache, runtime, or multi-layer changes.",
+      "patterns": [
+        "skills/xunzhi-change-playbook/**"
+      ],
+      "keywords": ["DTO", "workflow", "config", "cache", "runtime", "mapper", "entity", "cross-domain"]
+    },
+    {
+      "name": "xunzhi-debug-playbook",
+      "description": "Debug playbook for stuck sessions, repeated calls, restore failures, media failures, and AI runtime failures.",
+      "patterns": [
+        "skills/xunzhi-debug-playbook/**",
+        "admin/src/test/**"
+      ],
+      "keywords": ["failure", "restore", "retry", "stuck", "duplicate", "debug", "test"]
+    }
+  ],
+  "index_scripts": {
+    "api": "skills/xunzhi-repo-map/scripts/extract_api_index.py",
+    "config": "skills/xunzhi-ai-runtime/scripts/extract_config_index.py",
+    "workflow": "skills/xunzhi-interview-domain/scripts/extract_workflow_contracts.py",
+    "agent_scene": "skills/xunzhi-agent-domain/scripts/extract_agent_scene_map.py"
+  }
+}
