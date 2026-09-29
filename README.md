@@ -4,13 +4,6 @@
 
 > 本仓库主要包含后端服务，前端项目需要单独部署。
 
-## 项目预览
-
-![首页](docs/assets/首页登陆.png)
-
-![在线面试](docs/assets/面试入口.png)
-
-![面试结果分析](docs/assets/面试结果分析.png)
 
 ## 核心功能
 
@@ -157,22 +150,3 @@ AI-Meeting/
 ├── pom.xml                        # Maven 父工程配置
 └── .env.example                   # 环境变量示例
 ```
-
-## 前端项目
-
-前端需要单独运行并配置后端地址。原前端仓库：
-
-<https://github.com/lishuangqiang/AI-Meeting-Frontend>
-
-如果你已迁移前端，请将上面的地址替换为自己的前端仓库。
-
-## 项目截图
-
-![上传简历](docs/assets/上传简历.png)
-![提问环节](docs/assets/提问环节.png)
-![追问环节](docs/assets/追问环节.png)
-![结果复盘](docs/assets/结果复盘.png)
-
-## 开源协议
-
-本项目遵循 [MIT License](LICENSE)。使用、修改和再发布前，请阅读许可证以及第三方服务和资源的相关条款。贡献规范请参考 [CONTRIBUTING.md](CONTRIBUTING.md)。
