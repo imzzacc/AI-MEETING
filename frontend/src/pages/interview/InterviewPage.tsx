@@ -99,6 +99,67 @@ export default function InterviewPage() {
                     </option>
                   ))}
                 </select>
+                <div className="mt-3 flex flex-wrap gap-4">
+                  <label>
+                    岗位
+                    <select
+                      aria-label="面试岗位"
+                      className="ml-2 rounded border p-2"
+                      disabled={resume.isUploading}
+                      value={timing.retrievalScope.role}
+                      onChange={(e) =>
+                        timing.setRetrievalScope({
+                          ...timing.retrievalScope,
+                          role: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="java-backend">Java 后端</option>
+                      <option value="other">其他岗位</option>
+                    </select>
+                  </label>
+                  {[
+                    {
+                      key: "java",
+                      label: "Java 版本",
+                      versions: ["17", "8", "21"],
+                    },
+                    {
+                      key: "mysql",
+                      label: "MySQL 版本",
+                      versions: ["8.0", "5.7", "8.4"],
+                    },
+                  ].map(({ key, label, versions }) => (
+                    <label key={key}>
+                      {label}
+                      <select
+                        aria-label={label}
+                        className="ml-2 rounded border p-2"
+                        disabled={resume.isUploading}
+                        value={timing.retrievalScope.technologyVersions[key]}
+                        onChange={(e) =>
+                          timing.setRetrievalScope({
+                            ...timing.retrievalScope,
+                            technologyVersions: {
+                              ...timing.retrievalScope.technologyVersions,
+                              [key]: e.target.value,
+                            },
+                          })
+                        }
+                      >
+                        {versions.map((version) => (
+                          <option key={version} value={version}>
+                            {version}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ))}
+                </div>
+                <p className="mt-2 text-sm text-slate-600">
+                  当前参考资料覆盖 Java 后端、Java 17 与 MySQL
+                  8.0；其他岗位或版本缺少适用资料时，只保留相关主问题，不自动追加知识追问。
+                </p>
                 <p className="mt-2 text-sm text-slate-600">
                   主问题保持完整；系统根据回答和剩余时间调整追问。答题较慢时可能超过目标时长。
                 </p>

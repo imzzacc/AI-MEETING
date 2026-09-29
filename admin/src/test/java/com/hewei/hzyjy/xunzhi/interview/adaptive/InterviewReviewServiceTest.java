@@ -6,10 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cn.hutool.crypto.digest.DigestUtil;
 
 import org.junit.jupiter.api.*;
-import org.springframework.core.io.DefaultResourceLoader;
 
 import java.util.*;
 
@@ -58,17 +57,11 @@ class InterviewReviewServiceTest {
                 .thenReturn(evaluation(EvidenceState.INCORRECT));
         fixture.service.answer("s", 1L, fixture.request("r", "1", "volatile makes i++ atomic"));
         fixture.service.finish("s", 1L);
-        var catalog =
-                new InterviewKnowledgeCatalog(
-                        new ObjectMapper(),
-                        new DefaultResourceLoader(),
-                        new AdaptiveConfiguration());
         reviews =
                 new InterviewReviewService(
                         fixture.store,
                         fixture.service,
                         fixture.evaluator,
-                        catalog,
                         fixture.clock,
                         new AdaptiveConfiguration());
         reviews.process("s");
@@ -92,6 +85,23 @@ class InterviewReviewServiceTest {
         assertEquals(1, latest.getEvidence().size());
         assertEquals("NEEDS_CONFIRMATION", latest.getStatus());
         assertEquals("please review this classification", latest.getNote());
+    }
+
+    @Test
+    void legacyReportRetryKeepsOldDismissalIdentity() {
+        var legacy = fixture.store.findMistake(mistakeId);
+        fixture.store.mistakes.clear();
+        legacy.setId(DigestUtil.sha256Hex("1|java.volatile:atomicity|CONCEPT_ERROR"));
+        legacy.setDismissed(true);
+        legacy.setStatus("DISMISSED");
+        fixture.store.saveMistake(legacy);
+        Session s = fixture.store.find("s");
+        s.setRetrievalScope(null);
+        s.setReportStatus("PENDING");
+        fixture.store.save(s);
+        reviews.process("s");
+        assertEquals(1, fixture.store.mistakes.size());
+        assertTrue(fixture.store.findMistake(legacy.getId()).isDismissed());
     }
 
     @Test

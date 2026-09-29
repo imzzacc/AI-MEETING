@@ -146,6 +146,37 @@ class AdaptiveInterviewServiceTest {
     }
 
     @Test
+    void incompatibleScopePreservesMainQuestionsAndDoesNotSendKnowledgeToModel() {
+        store.sessions.clear();
+        service.configure(
+                "s",
+                1L,
+                1800,
+                null,
+                new RetrievalScope("other", RetrievalScope.defaults().technologyVersions()));
+        service.current("s", 1L);
+        Session s = store.find("s");
+        assertEquals(
+                List.of("volatile i++", "project example"),
+                s.getQuestions().stream().map(MainQuestion::text).toList());
+        assertTrue(s.getQuestions().get(0).topicIds().isEmpty());
+        service.answer("s", 1L, request("scope-answer", "1", "answer"));
+        verify(evaluator)
+                .evaluate(
+                        anyString(),
+                        eq("scope-answer"),
+                        eq("volatile i++"),
+                        eq("answer"),
+                        eq(List.of()),
+                        eq(List.of()));
+        s = store.find("s");
+        assertEquals("project example", s.currentText());
+        assertEquals(
+                "ROLE_MISMATCH",
+                s.getTurns().get(0).decision().excluded().get("volatile-atomicity-v1"));
+    }
+
+    @Test
     void duplicateAnswerReplaysWithoutScoringOrAdvancingAgain() {
         var request = request("r1", "1", "answer");
         var first = service.answer("s", 1L, request);
@@ -239,14 +270,9 @@ class AdaptiveInterviewServiceTest {
     void reportJobIsIdempotentAndRetainsLongAnswer() throws Exception {
         service.answer("s", 1L, request("r1", "1", "x".repeat(1500) + "TAIL"));
         service.answer("s", 1L, request("r2", "2", "answer"));
-        var catalog =
-                new InterviewKnowledgeCatalog(
-                        new ObjectMapper(),
-                        new DefaultResourceLoader(),
-                        new AdaptiveConfiguration());
         var reports =
                 new InterviewReviewService(
-                        store, service, evaluator, catalog, clock, new AdaptiveConfiguration());
+                        store, service, evaluator, clock, new AdaptiveConfiguration());
         reports.process("s");
         reports.process("s");
         assertEquals("SUCCEEDED", store.find("s").getReportStatus());

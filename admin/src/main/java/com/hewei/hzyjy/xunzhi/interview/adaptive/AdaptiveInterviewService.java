@@ -57,6 +57,15 @@ public class AdaptiveInterviewService {
     }
 
     public Session configure(String id, Long userId, int seconds, Long expectedRevision) {
+        return configure(id, userId, seconds, expectedRevision, null);
+    }
+
+    public Session configure(
+            String id,
+            Long userId,
+            int seconds,
+            Long expectedRevision,
+            RetrievalScope requestedScope) {
         if (!config.isEnabled()) throw new ClientException("Adaptive interview is not enabled");
         if (!Set.of(1200, 1800, 2700).contains(seconds))
             throw new ClientException("Unsupported target duration");
@@ -74,7 +83,17 @@ public class AdaptiveInterviewService {
                         s = new Session();
                         s.setId(id);
                         s.setUserId(userId);
-                        s.setCatalog(catalog.snapshot());
+                        RetrievalScope scope =
+                                requestedScope == null ? RetrievalScope.defaults() : requestedScope;
+                        InterviewKnowledgeCatalog.Selection selection;
+                        try {
+                            selection = InterviewKnowledgeCatalog.select(catalog.snapshot(), scope);
+                        } catch (IllegalArgumentException ex) {
+                            throw new ClientException("Invalid retrieval scope");
+                        }
+                        s.setRetrievalScope(scope);
+                        s.setCatalog(selection.catalog());
+                        s.setCatalogExclusions(selection.excluded());
                         s.setMode(config.getMode());
                         s.setCatalogHash(DigestUtil.sha256Hex(JSON.toJSONString(s.getCatalog())));
                         if (config.getMaxPerMain() < 0
@@ -85,6 +104,8 @@ public class AdaptiveInterviewService {
                         s.setMaxPerMain(config.getMaxPerMain());
                         s.setMaxPerSession(config.getMaxPerSession());
                     } else {
+                        if (requestedScope != null && !requestedScope.equals(s.getRetrievalScope()))
+                            throw new ClientException("POLICY_SCOPE_LOCKED");
                         if (s.getStartedAt() != 0
                                 || !Objects.equals(s.getRevision(), expectedRevision))
                             throw new ClientException("POLICY_LOCKED_OR_REVISION_CONFLICT");

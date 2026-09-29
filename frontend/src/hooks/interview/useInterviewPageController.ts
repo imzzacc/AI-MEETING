@@ -5,9 +5,16 @@ import { useAppSelector } from "@/store/hooks";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { adaptiveInterviewService } from "@/services/adaptiveInterviewService";
+import type { InterviewRetrievalScope } from "@/services/adaptiveInterviewService";
 
 export function useInterviewPageController() {
   const [targetDurationSeconds, setTargetDurationSeconds] = useState(1800);
+  const [retrievalScope, setRetrievalScope] = useState<InterviewRetrievalScope>(
+    {
+      role: "java-backend",
+      technologyVersions: { java: "17", mysql: "8.0", redis: "general-v1" },
+    },
+  );
   const capabilities = useQuery({
     queryKey: ["adaptive-interview-capabilities"],
     queryFn: adaptiveInterviewService.capabilities,
@@ -18,6 +25,7 @@ export function useInterviewPageController() {
 
   const sessionFlow = useInterviewSessionFlow(currentUser);
   const resumeAnalysis = useInterviewResumeAnalysis({
+    retrievalScope,
     targetDurationSeconds: capabilities.data?.enabled
       ? targetDurationSeconds
       : undefined,
@@ -33,6 +41,8 @@ export function useInterviewPageController() {
     timing: {
       targetDurationSeconds,
       setTargetDurationSeconds,
+      retrievalScope,
+      setRetrievalScope,
       enabled: capabilities.data?.enabled === true,
     },
     chat: {

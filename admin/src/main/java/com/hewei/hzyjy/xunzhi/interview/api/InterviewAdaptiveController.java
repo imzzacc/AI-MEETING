@@ -26,7 +26,9 @@ public class InterviewAdaptiveController {
     private final InterviewReviewService reviews;
 
     public record PolicyRequest(
-            @Min(1200) @Max(2700) int targetDurationSeconds, Long expectedRevision) {}
+            @Min(1200) @Max(2700) int targetDurationSeconds,
+            Long expectedRevision,
+            AdaptiveModels.RetrievalScope retrievalScope) {}
 
     public record ExtensionRequest(
             @NotBlank @Size(max = 64) String requestId, @Min(300) @Max(300) int extensionSeconds) {}
@@ -56,15 +58,14 @@ public class InterviewAdaptiveController {
                         id,
                         user.getUserId(),
                         request.targetDurationSeconds(),
-                        request.expectedRevision());
-        return Results.success(
-                Map.of(
-                        "revision",
-                        s.getRevision(),
-                        "targetDurationSeconds",
-                        s.getTargetDurationSeconds(),
-                        "mode",
-                        s.getMode()));
+                        request.expectedRevision(),
+                        request.retrievalScope());
+        var response = new LinkedHashMap<String, Object>();
+        response.put("revision", s.getRevision());
+        response.put("targetDurationSeconds", s.getTargetDurationSeconds());
+        response.put("mode", s.getMode());
+        response.put("retrievalScope", s.getRetrievalScope());
+        return Results.success(response);
     }
 
     @PostMapping("/sessions/{id}/extensions")

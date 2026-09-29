@@ -1,5 +1,11 @@
 {
-  "version": "java-starter-v1",
+  "version": "java-starter-v2",
+  "scopes": {
+    "redis.cache-failures": {"roles": ["java-backend"], "technology": "redis", "versions": ["general-v1"]},
+    "java.equals-hashcode": {"roles": ["java-backend"], "technology": "java", "versions": ["17"]},
+    "java.volatile": {"roles": ["java-backend"], "technology": "java", "versions": ["17"]},
+    "mysql.isolation": {"roles": ["java-backend"], "technology": "mysql", "versions": ["8.0"]}
+  },
   "topics": [
     {
       "id": "redis.cache-failures",

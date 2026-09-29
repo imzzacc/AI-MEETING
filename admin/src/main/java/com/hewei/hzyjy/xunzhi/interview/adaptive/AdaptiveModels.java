@@ -47,7 +47,20 @@ public final class AdaptiveModels {
             List<Source> sources,
             List<Candidate> candidates) {}
 
-    public record Catalog(String version, List<Topic> topics) {}
+    public record KnowledgeScope(Set<String> roles, String technology, Set<String> versions) {}
+
+    public record RetrievalScope(String role, Map<String, String> technologyVersions) {
+        public static RetrievalScope defaults() {
+            return new RetrievalScope(
+                    "java-backend", Map.of("java", "17", "mysql", "8.0", "redis", "general-v1"));
+        }
+    }
+
+    public record Catalog(String version, List<Topic> topics, Map<String, KnowledgeScope> scopes) {
+        public Catalog(String version, List<Topic> topics) {
+            this(version, topics, Map.of());
+        }
+    }
 
     public record MainQuestion(
             String number, String text, String hash, List<String> topicIds, int seconds) {}
@@ -123,6 +136,8 @@ public final class AdaptiveModels {
         private String policyVersion = "adaptive-v1";
         private Catalog catalog;
         private String catalogHash;
+        private RetrievalScope retrievalScope;
+        private Map<String, String> catalogExclusions = new LinkedHashMap<>();
         private List<MainQuestion> questions = new ArrayList<>();
         private String questionSetHash;
         private int targetDurationSeconds = 1800;

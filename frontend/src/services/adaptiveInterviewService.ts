@@ -1,5 +1,10 @@
 import service from "@/lib/request";
 
+export interface InterviewRetrievalScope {
+  role: string;
+  technologyVersions: Record<string, string>;
+}
+
 export interface InterviewTimeBudget {
   serverTime: number;
   interviewStartedAt: number;
@@ -47,8 +52,15 @@ export const adaptiveInterviewService = {
     service.get<{ enabled: boolean; durations: number[] }>(
       `${base}/adaptive-capabilities`,
     ),
-  configure: (id: string, targetDurationSeconds: number) =>
-    service.put(`${session(id)}/policy`, { targetDurationSeconds }),
+  configure: (
+    id: string,
+    targetDurationSeconds: number,
+    retrievalScope?: InterviewRetrievalScope,
+  ) =>
+    service.put(`${session(id)}/policy`, {
+      targetDurationSeconds,
+      retrievalScope,
+    }),
   extend: (id: string, requestId: string) =>
     service.post<InterviewTimeBudget>(`${session(id)}/extensions`, {
       requestId,

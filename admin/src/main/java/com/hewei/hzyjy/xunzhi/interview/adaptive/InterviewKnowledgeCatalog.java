@@ -36,6 +36,15 @@ public class InterviewKnowledgeCatalog {
             throw new IllegalArgumentException("Invalid catalog");
         Set<String> ids = new HashSet<>();
         for (Topic t : catalog.topics()) {
+            KnowledgeScope scope = catalog.scopes() == null ? null : catalog.scopes().get(t.id());
+            if (scope == null
+                    || scope.roles() == null
+                    || scope.roles().isEmpty()
+                    || scope.technology() == null
+                    || scope.technology().isBlank()
+                    || scope.versions() == null
+                    || scope.versions().isEmpty())
+                throw new IllegalArgumentException("Missing knowledge scope: " + t.id());
             if (!ids.add("t:" + t.id())
                     || t.aliases().isEmpty()
                     || t.rubricPoints().isEmpty()
@@ -74,6 +83,57 @@ public class InterviewKnowledgeCatalog {
                 .limit(5)
                 .map(Topic::id)
                 .toList();
+    }
+
+    public record Selection(Catalog catalog, Map<String, String> excluded) {}
+
+    /** Filter before freezing the plan, so incompatible material never reaches the evaluator. */
+    public static Selection select(Catalog catalog, RetrievalScope requested) {
+        if (requested == null
+                || requested.role() == null
+                || !requested.role().matches("[a-z][a-z0-9-]{0,63}")
+                || requested.technologyVersions() == null
+                || requested.technologyVersions().size() > 20)
+            throw new IllegalArgumentException("Invalid retrieval scope");
+        requested
+                .technologyVersions()
+                .forEach(
+                        (key, value) -> {
+                            if (key == null
+                                    || value == null
+                                    || !key.matches("[a-z][a-z0-9-]{0,31}")
+                                    || !value.matches("[a-zA-Z0-9][a-zA-Z0-9._-]{0,31}"))
+                                throw new IllegalArgumentException("Invalid technology version");
+                        });
+        List<Topic> selected = new ArrayList<>();
+        Map<String, String> excluded = new LinkedHashMap<>();
+        Map<String, KnowledgeScope> scopes = new LinkedHashMap<>();
+        for (Topic topic : catalog.topics()) {
+            KnowledgeScope scope =
+                    catalog.scopes() == null ? null : catalog.scopes().get(topic.id());
+            String reason =
+                    scope == null
+                            ? "KNOWLEDGE_SCOPE_MISSING"
+                            : !scope.roles().contains(requested.role())
+                                    ? "ROLE_MISMATCH"
+                                    : !scope.versions()
+                                                    .contains(
+                                                            requested
+                                                                    .technologyVersions()
+                                                                    .getOrDefault(
+                                                                            scope.technology(), ""))
+                                            ? "TECHNOLOGY_VERSION_MISMATCH"
+                                            : null;
+            if (reason == null) {
+                selected.add(topic);
+                scopes.put(topic.id(), scope);
+            } else {
+                for (Candidate candidate : topic.candidates()) excluded.put(candidate.id(), reason);
+            }
+        }
+        return new Selection(
+                new Catalog(catalog.version(), List.copyOf(selected), Map.copyOf(scopes)),
+                Map.copyOf(excluded));
     }
 
     public static List<Topic> retrieve(Catalog catalog, List<String> allowedIds) {

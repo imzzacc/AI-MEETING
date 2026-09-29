@@ -22,7 +22,6 @@ public class InterviewReviewService {
     private final AdaptiveSessionStore store;
     private final AdaptiveInterviewService interviews;
     private final GroundedInterviewEvaluator evaluator;
-    private final InterviewKnowledgeCatalog catalog;
     private final Clock clock;
     private final AdaptiveConfiguration configuration;
 
@@ -225,7 +224,17 @@ public class InterviewReviewService {
                                 : o.state() == EvidenceState.PARTIAL
                                         ? "REQUIRED_GAP"
                                         : "NEEDS_CONFIRMATION";
-                String id = DigestUtil.sha256Hex(s.getUserId() + "|" + gap + "|" + type);
+                String identity = s.getUserId() + "|" + gap + "|" + type;
+                // Keep legacy IDs so retrying an old report cannot bypass a user's dismissal.
+                if (s.getRetrievalScope() != null)
+                    identity +=
+                            "|"
+                                    + s.getCatalog().version()
+                                    + "|"
+                                    + s.getRetrievalScope().role()
+                                    + "|"
+                                    + new TreeMap<>(s.getRetrievalScope().technologyVersions());
+                String id = DigestUtil.sha256Hex(identity);
                 boolean resolved = latest.get(gap).state() == EvidenceState.COVERED;
                 interviews.locked(
                         "mistake-" + id,
@@ -374,9 +383,15 @@ public class InterviewReviewService {
                                 "Please write a new answer for an independent practice");
                     if (m.getPractices().size() >= 100)
                         throw new ClientException("Practice history limit reached");
+                    if (m.getSessionIds().isEmpty())
+                        throw new ClientException("Review reference unavailable");
                     List<Topic> topics =
                             InterviewKnowledgeCatalog.retrieve(
-                                    catalog.snapshot(), List.of(m.getKnowledgePointId()));
+                                    interviews
+                                            .owned(m.getSessionIds().iterator().next(), userId)
+                                            .getCatalog(),
+                                    List.of(m.getKnowledgePointId()));
+                    if (topics.isEmpty()) throw new ClientException("Review reference unavailable");
                     Evaluation result =
                             evaluator.evaluate(
                                     "review-" + id,

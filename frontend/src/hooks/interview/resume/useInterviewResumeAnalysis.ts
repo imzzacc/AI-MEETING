@@ -7,6 +7,7 @@ import {
 } from "react";
 import { interviewService } from "@/services/interviewService";
 import { adaptiveInterviewService } from "@/services/adaptiveInterviewService";
+import type { InterviewRetrievalScope } from "@/services/adaptiveInterviewService";
 import {
   buildResumeMetadata,
   deriveResumeName,
@@ -18,6 +19,7 @@ import { useInterviewUploadStage } from "@/hooks/interview/resume/useInterviewUp
 
 type UseInterviewResumeAnalysisOptions = {
   targetDurationSeconds?: number;
+  retrievalScope?: InterviewRetrievalScope;
   interviewerSessionId: string | null;
   setInterviewerSessionId: (sessionId: string | null) => void;
   syncNextQuestion: (sessionId: string) => Promise<void>;
@@ -27,6 +29,7 @@ type UseInterviewResumeAnalysisOptions = {
 
 export function useInterviewResumeAnalysis({
   targetDurationSeconds,
+  retrievalScope,
   interviewerSessionId,
   setInterviewerSessionId,
   syncNextQuestion,
@@ -222,6 +225,7 @@ export function useInterviewResumeAnalysis({
         await adaptiveInterviewService.configure(
           sessionId,
           targetDurationSeconds,
+          retrievalScope,
         );
       }
 

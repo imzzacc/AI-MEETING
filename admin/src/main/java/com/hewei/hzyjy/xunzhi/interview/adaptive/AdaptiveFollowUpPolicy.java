@@ -52,7 +52,7 @@ public class AdaptiveFollowUpPolicy {
             boolean disabled,
             Set<String> revoked) {
         Budget budget = budget(s, now, true);
-        Map<String, String> excluded = new LinkedHashMap<>();
+        Map<String, String> excluded = new LinkedHashMap<>(s.getCatalogExclusions());
         if (disabled || s.getMaxPerMain() == 0 || s.getMaxPerSession() == 0)
             return advance(s, budget, "FOLLOW_UP_DISABLED", excluded);
         if (s.getFollowUpCount() >= s.getMaxPerMain())

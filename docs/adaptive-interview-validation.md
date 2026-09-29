@@ -2,12 +2,12 @@
 
 日期：2026-09-29。分支：`feature/adaptive-interview-rag`，基线：`main@be2e9d799ee943a53eaecd9806cf0daa57338255`。
 
-状态：本地实现与自动化验证阶段。最终复验：后端 128 项单元/服务测试、3 项真实 Mongo 集成测试全部通过；前端 99 项全部通过，均为 0 失败、0 跳过。尚未满足完整 spec 的合并条件，功能默认关闭，main 未合并。
+状态：本地实现与自动化验证阶段。最终复验：后端 134 项单元/服务测试、3 项真实 Mongo 集成测试全部通过；前端 99 项全部通过，均为 0 失败、0 跳过。尚未满足完整 spec 的合并条件，功能默认关闭，main 未合并。
 
 ## 环境与测试入口
 
 - Windows，Java 17.0.19，Maven 3.9.16；真实 MongoDB 8.0.15 独立实例，绑定 `127.0.0.1:28029`，测试数据库使用随机名称，结束后删除。
-- 后端最终入口：`mvn -B -ntp spotless:apply clean verify`，含 Surefire、Failsafe、打包与格式检查，不跳过测试。最后一次源代码修改后重跑，2026-09-29 12:54:13（Asia/Shanghai）BUILD SUCCESS；39 个 Surefire 测试类 128 项，1 个 Failsafe 测试类 3 项全部通过。
+- 后端最终入口：`mvn -B -ntp spotless:apply clean verify`，含 Surefire、Failsafe、打包与格式检查，不跳过测试。最后一次源代码修改后重跑，2026-09-29 13:30:58（Asia/Shanghai）BUILD SUCCESS；40 个 Surefire 测试类 134 项，1 个 Failsafe 测试类 3 项全部通过。
 - 前端最终目录：`AI-MEETING/frontend`，执行 `npm ci`、`npm run check`（ESLint、TypeScript、Vitest）、`npm run build`。22 个测试文件，99 项通过，0 失败，0 跳过；构建成功。
 - `git diff --check`、`docker compose config --quiet` 通过。Compose 校验不代表镜像构建、Nginx 实际部署或浏览器 E2E。
 - 对新增前端源码与工作流进行凭据特征检查，未发现私钥/常见 API token；未复制原 `.env.development` / `.env.production`，未复制凭据、node_modules、dist 或原仓库 Git 元数据。
@@ -31,11 +31,11 @@
 
 ## 尚未完成的发布门槛
 
-1. 实际可用的工作流配置。按用户提供的 7 月 20 日目录重新核查：旧 `.env` 的相关字段为占位符，但旧 `简历评分面试官.yml` 内存在非占位的讯飞凭据，且在其配置指定的 MaaS WebSocket 端点通过签名握手。没有发送提示词或请求模型生成；该结果不证明额度免费、模型推理可用或星辰工作流权限。原部署虚拟机 SSH 可达，但当前免密认证失败，仍无法读取运行时 `agent_properties`。
+1. 新评分工作流及真实模型调用仍待配置与验证。原部署虚拟机已通过用户提供的账号登录，在项目的 `sql/agent_properties.sql` 找到四个旧面试工作流的非占位配置。对四个 flow 发出不带必填输入的请求，均返回 `22500 / Start node protocol error / 缺少必填字段 AGENT_USER_INPUT`，确认旧工作流能被定位。没有发送回答、文件或请求有效推理，不能作为免费额度、评分质量或完整 E2E 的证明。旧 `.env` 的相关字段仍为占位内容。原运行数据库处于停止状态，本轮没有启动它或读取业务记录。
 2. 在该账号导入并验证新 grounded workflow，确认结构化证据真正返回。模板文件和契约测试不能替代平台执行结果。
 3. 首批资料的人工审核、按岗位和技术版本的检索评估，以及至少 20 道题/60 条人工标注回答的真实模型评估。当前只有 4 个示例知识点，未声称 precision、recall 或引用支持率达到 spec 门槛。
 4. 从真实前端或 HTTP API 完成创建、上传、固定题库、动态追问、时间紧张省略追问、恢复、结束、面经和错题复习；覆盖三档时长及快慢脚本。真实账号鉴权、并发 worker 夺租和删除链路仍需验证。
-5. 当前实现尚无岗位/版本选择器、知识库上传审核界面及完整会话删除入口。在线检索使用本地审核目录方案，不能把这些管理能力描述成已交付。
+5. 岗位/版本选择器及检索白名单现已补齐，首批仍只覆盖 Java 后端、Java 17 / MySQL 8.0 与通用缓存模式。知识库上传审核界面及完整会话删除入口尚未完成。在线检索使用本地目录方案，不能把未完成的管理能力描述成已交付。
 
 这些缺口没有用 mock、skip 或构建成功替代。分支可以供 review，但不能据此称“完整功能已验证无问题”或合入 main。
 
@@ -45,6 +45,12 @@
 
 此前“未发现凭据”的检查仅覆盖新增前端和新增工作流，不能作为既有仓库无凭据的证明。已重新检查跟踪文件，确认当前文件不再包含本次识别出的这组值；此检查不等于完整历史扫描。
 
+## 岗位及版本边界补充
+
+- `java-starter-v2` 的岗位和版本白名单在调用模型前过滤资料与候选。自动化覆盖岗位不兼容、技术版本不兼容、未指定版本、缺失范围元数据以及恶意/超长范围格式；服务级用例确认资料为空时原主问题内容与顺序保持不变，模型不会收到被排除资料，决策中保存原因。
+- 错题复习使用来源会话的冻结资料；不同目录版本或岗位/技术范围不合并为同一错题。上述为确定性自动化证据，不替代人工检索标注或真实模型验收。
+- 本轮 SSH 检查发现原前端 Nginx 报上游主机无法解析，后端、MySQL、Mongo、Redis 均已停止；未启动或变更原部署，没有将其他项目的服务作为本任务测试环境。
+
 ## 日志
 
-本机日志在 `D:\golbalgpt\.tmp\`：`ai-meeting-final-verify-2.log`、`ai-meeting-integrated-frontend-check.log`、`ai-meeting-integrated-frontend-build.log`。后端 XML 结果位于 `admin/target/surefire-reports` 和 `admin/target/failsafe-reports`。日志不包含真实用户面试资料或供应商密钥，不提交整个构建目录。
+本机日志在 `D:\golbalgpt\.tmp\`：本轮最终 `ai-meeting-scope-final-verify-2.log`、`ai-meeting-scope-frontend-check.log`、`ai-meeting-scope-frontend-build.log`；上一轮日志保留。后端 XML 结果位于 `admin/target/surefire-reports` 和 `admin/target/failsafe-reports`。日志不包含真实用户面试资料或供应商密钥，不提交整个构建目录。
