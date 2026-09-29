@@ -135,7 +135,9 @@ class InterviewSessionFacadeConsistencyTest {
                 questionService,
                 recordService,
                 previewService,
-                sessionService
+                sessionService,
+                mock(com.hewei.hzyjy.xunzhi.interview.application.runtime.InterviewSessionRuntimeSnapshotService.class),
+                mock(com.hewei.hzyjy.xunzhi.interview.application.runtime.InterviewSessionRuntimeRehydrateService.class)
         );
 
         InterviewSession session = new InterviewSession();
@@ -170,7 +172,9 @@ class InterviewSessionFacadeConsistencyTest {
                 questionService,
                 recordService,
                 previewService,
-                sessionService
+                sessionService,
+                mock(com.hewei.hzyjy.xunzhi.interview.application.runtime.InterviewSessionRuntimeSnapshotService.class),
+                mock(com.hewei.hzyjy.xunzhi.interview.application.runtime.InterviewSessionRuntimeRehydrateService.class)
         );
 
         InterviewSession session = new InterviewSession();

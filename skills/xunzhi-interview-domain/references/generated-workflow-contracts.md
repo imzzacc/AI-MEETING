@@ -2,6 +2,19 @@
 
 该文档从 `admin/src/main/resources/workflow/*.yml` 自动提取。改工作流后请重新运行 `scripts/extract_workflow_contracts.py`。
 
+## grounded-interview-evaluator-v1.yml
+
+- 流程名称：`Grounded Interview Evaluator v1`
+- 描述：`Evidence analysis only. Follow-up selection is performed by server policy.`
+- 分类：`14`
+- DSL 版本：`v1`
+
+| 字段名 | 类型 | 必填 | 默认值 |
+| --- | --- | --- | --- |
+| `AGENT_USER_INPUT` | `string` | 是 | `用户本轮对话输入内容` |
+| `question` | `string / xfyun-file` | 否 | `问题` |
+| `resume_context` | `string / xfyun-file` | 否 | `` |
+
 ## 用户答案评分官.yml
 
 - 流程名称：`用户答案评分官`

@@ -68,6 +68,13 @@ services:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      INTERVIEW_ADAPTIVE_ENABLED: ${INTERVIEW_ADAPTIVE_ENABLED:-false}
+      INTERVIEW_ADAPTIVE_MODE: ${INTERVIEW_ADAPTIVE_MODE:-SHADOW}
+      INTERVIEW_ADAPTIVE_MAX_PER_MAIN: ${INTERVIEW_ADAPTIVE_MAX_PER_MAIN:-2}
+      INTERVIEW_ADAPTIVE_MAX_PER_SESSION: ${INTERVIEW_ADAPTIVE_MAX_PER_SESSION:-6}
+      INTERVIEW_ADAPTIVE_STOP_FOLLOW_UP: ${INTERVIEW_ADAPTIVE_STOP_FOLLOW_UP:-false}
+      INTERVIEW_ADAPTIVE_REPORT_WORKER: ${INTERVIEW_ADAPTIVE_REPORT_WORKER:-true}
+      XUNZHI_AGENT_INTERVIEW_GROUNDED_EVALUATION: ${XUNZHI_AGENT_INTERVIEW_GROUNDED_EVALUATION:-Grounded Interview Evaluator v1}
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_DATABASE: ${MYSQL_DATABASE:-mainshi_agent}
@@ -93,6 +100,16 @@ services:
       timeout: 5s
       retries: 10
       start_period: 60s
+
+  frontend:
+    profiles: ["web"]
+    build:
+      context: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8088:80"
 
 volumes:
   mysql-data:

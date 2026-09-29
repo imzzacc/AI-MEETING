@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow>
+    <chain name="adaptive_followup_v1">
+        THEN(adaptiveSelect);
+    </chain>
     <chain name="default_followup_chain">
         THEN(loadFollowUpContext,completedStateGuard,followUpLimitGuard,aiSuggestionJudge,lowScoreJudge,missingPointsJudge,followUpDecisionFinalize);
     </chain>

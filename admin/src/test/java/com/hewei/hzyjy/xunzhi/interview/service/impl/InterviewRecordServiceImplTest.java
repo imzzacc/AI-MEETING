@@ -100,16 +100,14 @@ class InterviewRecordServiceImplTest {
         existingRecord.setUserId(1001L);
         existingRecord.setSessionId("interview-session-1");
         existingRecord.setCreateTime(new Date(System.currentTimeMillis() - 30_000));
-        when(mapper.selectOne(any())).thenReturn(null, null, existingRecord);
+        when(mapper.selectOne(any())).thenReturn(null, existingRecord);
         when(mapper.insert(any(InterviewRecordDO.class))).thenReturn(1);
         when(mapper.updateById(any(InterviewRecordDO.class))).thenReturn(1);
 
         service.saveInterviewRecordFromRedis("interview-session-1", 1001L);
 
         InOrder inOrder = inOrder(ownershipService, mapper, sessionService);
-        inOrder.verify(ownershipService).requireOwnedSession("interview-session-1", 1001L);
-        inOrder.verify(mapper).selectOne(any());
-        inOrder.verify(ownershipService).requireOwnedSession("interview-session-1", 1001L);
+        inOrder.verify(ownershipService, org.mockito.Mockito.times(2)).requireOwnedSession("interview-session-1", 1001L);
         inOrder.verify(mapper).selectOne(any());
         inOrder.verify(mapper).insert(any(InterviewRecordDO.class));
         inOrder.verify(sessionService).finishSession("interview-session-1", 1001L);

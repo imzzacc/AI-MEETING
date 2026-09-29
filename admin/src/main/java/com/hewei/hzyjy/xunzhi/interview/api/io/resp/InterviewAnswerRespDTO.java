@@ -7,6 +7,9 @@ import lombok.Data;
  */
 @Data
 public class InterviewAnswerRespDTO {
+    private com.hewei.hzyjy.xunzhi.interview.adaptive.AdaptiveModels.Budget timeBudget;
+    private java.util.Map<String, String> decisionSummary;
+    private java.util.Map<String, String> pendingAnswer;
     
     /**
      * 题号

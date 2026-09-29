@@ -31,7 +31,7 @@ class RedissonRequestRateLimitServiceTest {
 
         assertTrue(service.tryAcquire("user:alice", null));
         verify(rateLimiter).trySetRate(RateType.OVERALL, 20L, 1L, RateIntervalUnit.SECONDS);
-        verify(rateLimiter).expire(60L, TimeUnit.SECONDS);
+        verify(rateLimiter).expireAsync(60L, TimeUnit.SECONDS);
         verify(rateLimiter).tryAcquire(1L);
     }
 
@@ -64,7 +64,7 @@ class RedissonRequestRateLimitServiceTest {
         assertTrue(service.tryAcquire("user:bob", null));
 
         verify(rateLimiter, times(1)).trySetRate(RateType.OVERALL, 20L, 1L, RateIntervalUnit.SECONDS);
-        verify(rateLimiter, times(1)).expire(60L, TimeUnit.SECONDS);
+        verify(rateLimiter, times(1)).expireAsync(60L, TimeUnit.SECONDS);
         verify(rateLimiter, times(2)).tryAcquire(1L);
     }
 
