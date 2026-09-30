@@ -68,6 +68,38 @@ class AdaptivePersistenceIT {
     }
 
     @Test
+    void realCatalogAndDecisionKeysRoundTripThroughApplicationMapping() throws Exception {
+        try (var context = new org.springframework.context.annotation.AnnotationConfigApplicationContext()) {
+            context.register(AdaptiveMongoMappingConfiguration.class);
+            context.registerBean("mongoConverter",
+                    org.springframework.data.mongodb.core.convert.MappingMongoConverter.class,
+                    () -> (org.springframework.data.mongodb.core.convert.MappingMongoConverter) mongo.getConverter());
+            context.refresh();
+            var catalog = new InterviewKnowledgeCatalog(
+                    new com.fasterxml.jackson.databind.ObjectMapper(),
+                    new org.springframework.core.io.DefaultResourceLoader(), new AdaptiveConfiguration()).snapshot();
+            Session s = create();
+            s.setCatalog(catalog);
+            s.setRetrievalScope(RetrievalScope.defaults());
+            var keys = Map.of("java.volatile", "VERSION_MISMATCH", "java_volatile", "DISTINCT_KEY");
+            s.setCatalogExclusions(keys);
+            var decision = new Decision("NEXT_MAIN", "NO_CANDIDATE", null, null, "v1", catalog.version(), keys);
+            s.getTurns().add(new Turn("r", "h", "1", "volatile", "answer", 1,
+                    new Evaluation(50, "feedback", List.of(), "test", "1"), List.of(), decision, null, null));
+            store.save(s);
+            Session restored = new MongoAdaptiveSessionStore(new MongoTemplate(client, mongo.getDb().getName())).find(s.getId());
+            assertEquals(catalog, restored.getCatalog());
+            assertEquals(RetrievalScope.defaults(), restored.getRetrievalScope());
+            assertEquals(keys, restored.getCatalogExclusions());
+            assertEquals(keys, restored.getTurns().get(0).decision().excluded());
+            var raw = mongo.getCollection("interview_adaptive_session").find().first();
+            assertNotNull(raw);
+            var scopes = raw.get("catalog", org.bson.Document.class).get("scopes", org.bson.Document.class);
+            assertTrue(scopes.containsKey("java.volatile"));
+        }
+    }
+
+    @Test
     void staleWriterCannotOverwriteCommittedAnswerAndScore() {
         create();
         Session first = store.find("session"), stale = store.find("session");

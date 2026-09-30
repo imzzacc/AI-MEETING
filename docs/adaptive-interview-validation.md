@@ -61,4 +61,6 @@
 
 ## 日志
 
+2026-09-30 HTTP 联调补充：真实账号注册/登录和会话创建成功后，策略配置暴露 Mongo 默认拒绝 `mysql.isolation` 等含点号的 Map key。新增 Mongo 映射配置保留原始键（要求 MongoDB 5+，项目部署版本为 7/8），避免改成下划线后与已有 ID 碰撞。真实 Mongo 回归现使用完整目录、范围和决策排除原因，并经 Spring 配置装配验证往返一致。修复后 15:35:48 完整 `clean verify` 通过：136 项单元/服务测试、4 项 Mongo IT，0 失败/跳过，日志 `grounded-mongo-map-final-verify.log`。前次打包被正在运行的测试应用占用 JAR 中断；后续应用从独立运行副本启动，不锁构建产物。
+
 本机日志在个人工作区 `C:\Users\hp\Documents\AI-MEETING-Workspace\temp\`：后端本轮最终 `grounded-contract-final-verify.log`，最终单条合成 API 响应 `grounded-live-response-strict.json`；上一轮 `ai-meeting-scope-final-verify-2.log`、`ai-meeting-scope-frontend-check.log`、`ai-meeting-scope-frontend-build.log` 保留。后端 XML 结果位于 `admin/target/surefire-reports` 和 `admin/target/failsafe-reports`。上述证据不包含真实用户面试资料或供应商密钥，不提交整个构建目录或个人测试环境配置。
