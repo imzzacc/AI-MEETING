@@ -50,6 +50,7 @@ export function useInterviewPageController() {
       input: sessionFlow.input,
       setInput: sessionFlow.setInput,
       isReady: sessionFlow.isReady,
+      canAnswer: sessionFlow.canAnswer,
       isSubmitting: sessionFlow.isInterviewSubmitting,
       handleSend: sessionFlow.handleSend,
     },

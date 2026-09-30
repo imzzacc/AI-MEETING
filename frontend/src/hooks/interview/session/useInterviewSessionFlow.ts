@@ -73,6 +73,10 @@ export function useInterviewSessionFlow(user: InterviewFlowUser) {
   } = useInterviewMessageStream();
 
   const isReady = Boolean(interviewerSessionId) && !isInterviewFinished;
+  const canAnswer =
+    isReady &&
+    Boolean(currentQuestionNumber?.trim()) &&
+    Boolean(currentQuestionContent?.trim());
 
   const buildInterviewRoomPath = useCallback(
     (sessionId: string) =>
@@ -360,6 +364,7 @@ export function useInterviewSessionFlow(user: InterviewFlowUser) {
     setInput,
     isReady,
     isInterviewSubmitting,
+    canAnswer,
     interviewError,
     isEndingInterview,
     currentQuestionNumber,

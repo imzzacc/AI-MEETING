@@ -122,6 +122,30 @@ describe("useInterviewSessionFlow", () => {
     expect(getCurrentQuestionMock).not.toHaveBeenCalled();
   });
 
+  it("keeps the composer unavailable until the current question is restored", async () => {
+    useParamsMock.mockReturnValue({ sessionId: "restoring-session" });
+    let resolveQuestion!: (value: unknown) => void;
+    getCurrentQuestionMock.mockReturnValue(
+      new Promise((resolve) => {
+        resolveQuestion = resolve;
+      }),
+    );
+    const { result } = renderSessionFlow();
+    expect(result.current.isReady).toBe(true);
+    expect(result.current.canAnswer).toBe(false);
+    await act(async () => {
+      resolveQuestion({
+        isSuccess: true,
+        nextQuestion: "Restored question",
+        nextQuestionNumber: "Q2",
+        finished: false,
+      });
+    });
+    await waitFor(() => expect(result.current.canAnswer).toBe(true));
+    expect(result.current.currentQuestionNumber).toBe("Q2");
+    expect(answerInterviewQuestionMock).not.toHaveBeenCalled();
+  });
+
   it("does not append a next-question message when syncNextQuestion finishes the interview", async () => {
     getCurrentQuestionMock.mockResolvedValue({
       isSuccess: true,

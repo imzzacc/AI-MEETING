@@ -15,6 +15,8 @@ import com.hewei.hzyjy.xunzhi.interview.service.*;
 import com.hewei.hzyjy.xunzhi.interview.service.cache.*;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.redisson.api.RLock;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -157,6 +159,67 @@ class AdaptiveInterviewServiceTest {
         r.setQuestionNumber(number);
         r.setAnswerContent(answer);
         return r;
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1200,30,true", "1800,30,true", "2700,30,true",
+            "1200,1201,false", "1800,1801,false", "2700,2701,false"})
+    void durationAndPaceMatrixKeepsEveryMainQuestion(int targetSeconds, int answerSeconds,
+            boolean expectsFollowup) {
+        var now = new java.util.concurrent.atomic.AtomicLong(10_000);
+        Clock advancingClock = mock(Clock.class);
+        when(advancingClock.millis()).thenAnswer(i -> now.get());
+        org.springframework.test.util.ReflectionTestUtils.setField(service, "clock", advancingClock);
+        store.sessions.clear();
+        service.configure("s", 1L, targetSeconds, null);
+        service.current("s", 1L);
+        var plan = List.copyOf(store.find("s").getQuestions());
+        when(evaluator.evaluate(anyString(), anyString(), anyString(), anyString(), anyList(), anyList()))
+                .thenReturn(new Evaluation(10, "Synthetic incorrect answer", List.of(new Observation(
+                        "java.volatile", "atomicity", EvidenceState.INCORRECT,
+                        List.of("atomic"), List.of("java-jls17-memory"), "Synthetic evidence")), "test", "1"));
+        int submitted = 0;
+        while (!store.find("s").isFinished() && submitted < 5) {
+            String number = store.find("s").currentNumber();
+            now.addAndGet(answerSeconds * 1000L);
+            var response = service.answer("s", 1L, request("pace-" + submitted++, number, "atomic"));
+            assertEquals(plan, store.find("s").getQuestions());
+            if (now.get() >= 10_000 + targetSeconds * 1000L) {
+                assertFalse(Boolean.TRUE.equals(response.getIsFollowUp()));
+                assertEquals("TARGET_TIME_EXCEEDED", response.getDecisionSummary().get("reasonCode"));
+            }
+        }
+        Session finished = store.find("s");
+        assertTrue(finished.isFinished());
+        assertEquals(2, finished.getTurns().stream().filter(t -> !t.questionNumber().contains("-F")).count());
+        assertEquals(expectsFollowup ? 1 : 0, finished.getTotalFollowUps());
+        assertEquals("PENDING", finished.getReportStatus());
+        assertEquals(10_000, finished.getStartedAt());
+    }
+
+    @Test
+    void publicationGateSuppressesCandidateWhenBudgetExpiresAfterFirstDecision() {
+        var now = new java.util.concurrent.atomic.AtomicLong(10_000);
+        Clock advancingClock = mock(Clock.class);
+        when(advancingClock.millis()).thenAnswer(i -> now.get());
+        org.springframework.test.util.ReflectionTestUtils.setField(service, "clock", advancingClock);
+        var evidence = new Evaluation(10, "Synthetic incorrect answer", List.of(new Observation(
+                "java.volatile", "atomicity", EvidenceState.INCORRECT,
+                List.of("atomic"), List.of("java-jls17-memory"), "Synthetic evidence")), "test", "1");
+        when(evaluator.evaluate(anyString(), anyString(), anyString(), anyString(), anyList(), anyList()))
+                .thenReturn(evidence);
+        doAnswer(i -> {
+            Decision result = policy.decide(i.getArgument(0), i.getArgument(1), i.getArgument(2),
+                    i.getArgument(3), false, Set.of());
+            now.set(1_811_000);
+            return result;
+        }).when(rules).decide(any(), any(), anyLong(), any());
+        var result = service.answer("s", 1L, request("publish-expiry", "1", "atomic"));
+        assertEquals("2", result.getNextQuestionNumber());
+        assertFalse(Boolean.TRUE.equals(result.getIsFollowUp()));
+        assertEquals("BUDGET_CHANGED_BEFORE_COMMIT", result.getDecisionSummary().get("reasonCode"));
+        assertEquals(0, store.find("s").getTotalFollowUps());
+        verify(evaluator, times(1)).evaluate(anyString(), anyString(), anyString(), anyString(), anyList(), anyList());
     }
 
     @Test

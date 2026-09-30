@@ -82,4 +82,4 @@ mongosh '实际Mongo连接URI/目标数据库' --file scripts/adaptive-indexes.j
 
 前端：`npm ci`、`npm run check`、`npm run build`。CI 同时运行前后端检查。本轮额外修正基线中缺失的测试构造参数、Mockito argLine、异步限流 mock、归档调用序列和语音测试的音频时间范围；未通过删用例来放行。
 
-详细数量和限制见 [验收记录](adaptive-interview-validation.md)。已执行一场真实HTTP面试及真实账号鉴权、浏览器报告与导出流程。60条人工审核评估、岗位/版本检索质量、各时长完整浏览器体验仍需补齐。会话删除的实际 Mongo/MySQL/Redis 清理已验证，首次 UI 删除暴露 Redisson 依赖冲突，修复后的后台补偿成功；直接 UI 成功删除仍需复验；自动化通过不等于完整spec验收完成。
+详细数量和限制见 [验收记录](adaptive-interview-validation.md)。已执行45分钟策略真实HTTP面试、30分钟策略完整浏览器面试（含3次RAG追问）、面经导出、复习、直接UI删除及Mongo/MySQL/Redis清理；保留修复前的失败记录。刷新时题目恢复完成前禁止输入，避免题号缺失错误。会话锁默认等待2秒应对正常页面并发读取，可通过 `xunzhi-agent.interview.answer-guard.adaptive-lock-wait-millis` 覆盖；持续占用仍明确失败，原模式锁策略不变。正式人工模型/检索评估、其他时长体验与部分故障场景仍需补齐，自动化不等于完整spec验收完成。

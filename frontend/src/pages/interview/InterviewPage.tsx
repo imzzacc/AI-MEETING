@@ -17,7 +17,15 @@ export default function InterviewPage() {
   const [isSketchpadOpen, setIsSketchpadOpen] = useState(false);
   const { chat, interview, resume, camera, timing } =
     useInterviewPageController();
-  const { setInput, isReady, isSubmitting, handleSend, input, messages } = chat;
+  const {
+    setInput,
+    isReady,
+    canAnswer,
+    isSubmitting,
+    handleSend,
+    input,
+    messages,
+  } = chat;
   const { setIsPreviewOpen } = resume;
 
   const captureFrame = useCallback(async () => {
@@ -210,7 +218,7 @@ export default function InterviewPage() {
             onChange={setInput}
             onSend={handleSend}
             placeholder="输入你的回答，或点击麦克风开始语音作答..."
-            disabled={!isReady || isSubmitting || resume.isUploading}
+            disabled={!canAnswer || isSubmitting || resume.isUploading}
             showDefaultLeading={false}
           />
         }
