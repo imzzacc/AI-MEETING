@@ -18,6 +18,7 @@ public class InterviewEvidenceValidator {
                 || input.feedback().length() > 6000
                 || input.observations() != null && input.observations().size() > 50)
             throw new IllegalArgumentException("Invalid evaluation score or feedback");
+        boolean chinese = GroundedFeedback.chinese(answer);
         var allowedSources =
                 sources.stream().map(Source::id).collect(java.util.stream.Collectors.toSet());
         var observations = new LinkedHashMap<String, Observation>();
@@ -70,7 +71,7 @@ public class InterviewEvidenceValidator {
                                 state,
                                 validQuotes ? List.copyOf(o.answerQuotes()) : List.of(),
                                 validSources ? List.copyOf(o.sourceChunkIds()) : List.of(),
-                                o.rationale() == null ? "" : o.rationale());
+                                GroundedFeedback.rationale(state, chinese));
                 String key = o.knowledgePointId() + ":" + o.rubricPointId();
                 Observation previous = observations.get(key);
                 if (previous != null && previous.state() != checked.state())
@@ -81,12 +82,14 @@ public class InterviewEvidenceValidator {
                                     EvidenceState.UNCERTAIN,
                                     List.of(),
                                     List.of(),
-                                    "Conflicting observations");
+                                    GroundedFeedback.rationale(EvidenceState.UNCERTAIN, chinese));
                 observations.put(key, checked);
             }
         return new Evaluation(
                 input.score(),
-                input.feedback(),
+                topics.isEmpty()
+                        ? input.feedback()
+                        : GroundedFeedback.render(input.score(), List.copyOf(observations.values()), sources, chinese),
                 List.copyOf(observations.values()),
                 input.modelVersion(),
                 "1");
