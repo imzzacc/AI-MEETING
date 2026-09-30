@@ -250,9 +250,11 @@ public class InterviewReviewService {
                                 m.setType(type);
                                 m.setQuestion(t.question());
                                 m.setStatus(
-                                        o.state() == EvidenceState.UNCERTAIN
-                                                ? "NEEDS_CONFIRMATION"
-                                                : resolved ? "REVIEWING" : "TO_REVIEW");
+                                        resolved
+                                                ? "REVIEWING"
+                                                : o.state() == EvidenceState.INCORRECT
+                                                        ? "TO_REVIEW"
+                                                        : "NEEDS_CONFIRMATION");
                             }
                             boolean duplicate =
                                     m.getEvidence().stream()
@@ -284,7 +286,8 @@ public class InterviewReviewService {
                                 if (m.getNote() == null
                                         && !resolved
                                         && o.state() != EvidenceState.UNCERTAIN)
-                                    m.setStatus("TO_REVIEW");
+                                    m.setStatus(o.state() == EvidenceState.INCORRECT
+                                            ? "TO_REVIEW" : "NEEDS_CONFIRMATION");
                                 m.setUpdatedAt(clock.millis());
                                 store.saveMistake(m);
                             }
@@ -452,7 +455,7 @@ public class InterviewReviewService {
     private static String label(EvidenceState state) {
         return switch (state) {
             case COVERED -> "本轮已覆盖";
-            case PARTIAL -> "必要要点待补全";
+            case PARTIAL -> "部分覆盖，必要缺口待核对";
             case INCORRECT -> "存在错误";
             case NOT_OBSERVED -> "未涉及";
             case UNCERTAIN -> "待确认";

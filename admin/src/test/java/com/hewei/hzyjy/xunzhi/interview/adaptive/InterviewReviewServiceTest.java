@@ -116,6 +116,26 @@ class InterviewReviewServiceTest {
     }
 
     @Test
+    void partialModelJudgmentCreatesPendingConfirmationInsteadOfConfirmedOmission() {
+        fixture.store.mistakes.clear();
+        Session session = fixture.store.find("s");
+        Turn previous = session.getTurns().get(0);
+        Evaluation partial = new InterviewEvidenceValidator().validate(
+                evaluation(EvidenceState.PARTIAL), previous.answer(), session.getCatalog().topics(), previous.sources());
+        session.setTurns(new ArrayList<>(List.of(new Turn(previous.requestId(), previous.answerHash(),
+                previous.questionNumber(), previous.question(), previous.answer(), previous.committedAt(),
+                partial, previous.sources(), previous.decision(), previous.shadowDecision(), previous.response()))));
+        session.setReportStatus("PENDING");
+        fixture.store.save(session);
+        reviews.process("s");
+        Mistake mistake = fixture.store.mistakes.values().iterator().next();
+        assertEquals("REQUIRED_GAP", mistake.getType());
+        assertEquals("NEEDS_CONFIRMATION", mistake.getStatus());
+        assertFalse(mistake.getEvidence().get(0).rationale().equals("reason"));
+        assertTrue(fixture.store.find("s").getReportMarkdown().contains("必要缺口待核对"));
+    }
+
+    @Test
     void practiceRetriesAndRepeatedTextDoNotInflateMastery() {
         when(fixture.evaluator.evaluate(
                         anyString(), anyString(), anyString(), anyString(), anyList(), anyList()))
