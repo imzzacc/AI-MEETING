@@ -37,7 +37,7 @@ spec 中的计划、策略、证据、决策和报告任务是逻辑模型。本
 
 新增场景 `interview-grounded-evaluation` 默认绑定 `Grounded Interview Evaluator v1`。**不要绑定原“用户答案评分官”**：它的输出缺少知识证据，且会把新输入当作普通回答。
 
-导入 `admin/src/main/resources/workflow/grounded-interview-evaluator-v1.yml` 到实际使用的讯飞工作流平台，选择账号可用的模型，并登记该工作流的凭据与 flow ID。模板沿用现有 YAML 结构，尚未在真实账号导入/运行验证。系统提示另存于 `docs/grounded-evaluator-system-prompt.txt` 供审核；修改时须同步 YAML。
+导入 `admin/src/main/resources/workflow/grounded-interview-evaluator-v1.yml` 到实际使用的讯飞工作流平台，选择账号已开通 API 权限且有额度的模型，并登记该工作流的凭据与 flow ID。2026-09-30 已在个人账号用 Spark Pro-128k 完成网页调试、更新 API 配置和绑定，单条合成回答的真实 API 契约检查通过。模板中的模型配置仍是导入占位选择，不能据此推定其他账号具有模型权限。系统提示另存于 `docs/grounded-evaluator-system-prompt.txt` 供审核；修改时须同步 YAML。
 
 输入 `AGENT_USER_INPUT` 是一个 JSON 字符串，包含 `question`、`answer`、`rubrics`、`sources`；`question` 和 `resume_context` 兼容已有参数入口。输出必须是 JSON：
 
@@ -45,7 +45,7 @@ spec 中的计划、策略、证据、决策和报告任务是逻辑模型。本
 {"score":70,"feedback":"本轮反馈","analysisSchemaVersion":"1","observations":[{"knowledgePointId":"java.volatile","rubricPointId":"atomicity","state":"INCORRECT","answerQuotes":["volatile 能保证 i++ 原子性"],"sourceChunkIds":["java-jls17-memory"],"rationale":"复合自增并非原子操作"}]}
 ```
 
-旧 schema 会明确失败，保留待处理回答供重试。模型输出的追问题目或动作不会被采用。结构校验无法证明语义正确；上线前仍需要 spec 中的人工标注质量评估。
+兼容讯飞结束节点在 `choices[].delta.content` 内返回单一 `result` 字符串的包装；只解开这一层，不将任意对象转成评分反馈。`feedback` 必须是非空字符串，语言键对象等格式会明确失败；旧 schema 同样失败，保留待处理回答供重试。模型输出的追问题目或动作不会被采用。结构校验无法证明语义正确；上线前仍需要 spec 中的人工标注质量评估。
 
 ## 配置与运行
 
@@ -80,4 +80,4 @@ mongosh '实际Mongo连接URI/目标数据库' --file scripts/adaptive-indexes.j
 
 前端：`npm ci`、`npm run check`、`npm run build`。CI 同时运行前后端检查。本轮额外修正基线中缺失的测试构造参数、Mockito argLine、异步限流 mock、归档调用序列和语音测试的音频时间范围；未通过删用例来放行。
 
-详细数量和限制见 [验收记录](adaptive-interview-validation.md)。真实模型 E2E、60 条人工审核评估、岗位/版本检索质量、实际工作流导入、真实账号鉴权和会话删除全链路仍是合并前门槛。当前没有既有完整会话删除 API；新模块对已删除来源拒绝发布/读取的测试不等于端到端数据删除已交付。
+详细数量和限制见 [验收记录](adaptive-interview-validation.md)。真实模型 E2E、60 条人工审核评估、岗位/版本检索质量、真实账号鉴权和会话删除全链路仍是合并前门槛。当前没有既有完整会话删除 API；新模块对已删除来源拒绝发布/读取的测试不等于端到端数据删除已交付。

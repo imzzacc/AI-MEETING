@@ -14,6 +14,48 @@ import java.util.*;
 
 class GroundedEvaluatorContractTest {
     @Test
+    void acceptsXingChenNamedEndNodeOutputInsideDeltaContent() throws Exception {
+        String evaluation =
+                "{\"score\":25,\"feedback\":\"Increment is not atomic.\","
+                        + "\"analysisSchemaVersion\":\"1\",\"observations\":[]}";
+        String wrapped =
+                com.alibaba.fastjson2.JSON.toJSONString(
+                        Map.of(
+                                "code", 0,
+                                "choices", List.of(Map.of("delta", Map.of("content",
+                                        com.alibaba.fastjson2.JSON.toJSONString(
+                                                Map.of("result", evaluation)))))));
+        var result = evaluatorReturning(wrapped)
+                .evaluate("s", "r", "question", "answer", List.of(), List.of());
+        assertEquals(25, result.score());
+        assertEquals("Increment is not atomic.", result.feedback());
+    }
+
+    @Test
+    void rejectsLanguageMapFeedbackInsteadOfStoringItAsUserFacingText() throws Exception {
+        String evaluation =
+                "{\"score\":25,\"feedback\":{\"en\":\"Increment is not atomic.\"},"
+                        + "\"analysisSchemaVersion\":\"1\",\"observations\":[]}";
+        var evaluator = evaluatorReturning(evaluation);
+        var error = assertThrows(IllegalStateException.class,
+                () -> evaluator.evaluate("s", "r", "question", "answer", List.of(), List.of()));
+        assertEquals("Grounded evaluation requires text feedback", error.getCause().getMessage());
+    }
+
+    private WorkflowGroundedInterviewEvaluator evaluatorReturning(String response) throws Exception {
+        var agents = mock(BusinessAgentResolver.class);
+        var invoker = mock(InterviewAiInvoker.class);
+        when(agents.resolveRequired(BusinessAgentScene.INTERVIEW_GROUNDED_EVALUATION))
+                .thenReturn(new AgentPropertiesDO());
+        when(invoker.buildSingleFlightKey(any(), anyString(), anyString(), anyString()))
+                .thenReturn("flight");
+        when(invoker.callAiSyncWithParameters(anyString(), any(), anyMap(), any(), anyString()))
+                .thenReturn(response);
+        return new WorkflowGroundedInterviewEvaluator(agents, invoker,
+                new InterviewResponseParser(), new InterviewEvidenceValidator());
+    }
+
+    @Test
     void requiresGroundedSchemaInsteadOfSilentlyAcceptingLegacyWorkflow() throws Exception {
         var agents = mock(BusinessAgentResolver.class);
         var invoker = mock(InterviewAiInvoker.class);

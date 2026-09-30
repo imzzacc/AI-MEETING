@@ -68,8 +68,13 @@ public class WorkflowGroundedInterviewEvaluator implements GroundedInterviewEval
                                     requestId,
                                     prompt));
             Map<String, Object> result = parser.parseEvaluationResult(raw);
+            // XingChen returns the end node's named output inside delta.content.
+            if (result != null && result.size() == 1 && result.get("result") instanceof String text)
+                result = parser.parseEvaluationResult(text);
             if (result == null)
                 throw new IllegalStateException("Grounded evaluation returned no JSON");
+            if (!(result.get("feedback") instanceof String feedback) || feedback.isBlank())
+                throw new IllegalStateException("Grounded evaluation requires text feedback");
             Integer score = parser.parseScoreFromResponse(result, "score");
             if (score == null)
                 throw new IllegalStateException("Grounded evaluation returned no score");
@@ -90,7 +95,7 @@ public class WorkflowGroundedInterviewEvaluator implements GroundedInterviewEval
             return validator.validate(
                     new Evaluation(
                             score,
-                            Objects.toString(result.get("feedback"), ""),
+                            feedback,
                             observations,
                             "workflow:" + agent.getId(),
                             "1"),

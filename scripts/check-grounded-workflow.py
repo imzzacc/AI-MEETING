@@ -48,6 +48,10 @@ def check_contract(response, sample):
         content = response["content"]
     if isinstance(content, str):
         content = json.loads(content)
+    if isinstance(content, dict) and "result" in content:
+        content = content["result"]
+        if isinstance(content, str):
+            content = json.loads(content)
     checks = {
         "schema": str(content.get("analysisSchemaVersion")) == "1",
         "score": type(content.get("score")) is int and 0 <= content["score"] <= 100,
@@ -80,6 +84,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--generate", action="store_true")
+    parser.add_argument("--save-synthetic-response", type=Path,
+                        help="Optional local fixture from this fixed synthetic sample only")
     args = parser.parse_args()
     config = read_config(args.config)
     sample = sample_input()
@@ -97,6 +103,11 @@ def main():
     )
     with urllib.request.urlopen(request, timeout=65) as response:
         data = json.loads(response.read(1_000_000))
+    if args.generate and args.save_synthetic_response:
+        safe_data = json.dumps(data, ensure_ascii=False)
+        for key in ("API_FLOW_ID", "API_KEY", "API_SECRET"):
+            safe_data = safe_data.replace(config[key], "[REDACTED]")
+        args.save_synthetic_response.write_text(safe_data, encoding="utf-8")
     code = data.get("code")
     # Never emit raw errors, model output, request bodies or authentication headers.
     result = {"generation_requested": args.generate,
