@@ -1,0 +1,926 @@
+{
+  "humanReviewed": false,
+  "purpose": "Assistant-authored draft labels for human review. 20 distinct questions, 60 synthetic answers; this is not human-reviewed acceptance evidence.",
+  "cases": [
+    {
+      "id": "v1-correct",
+      "questionId": "v1",
+      "topicId": "java.volatile",
+      "question": "多个线程共享一个 volatile int 计数器，并执行 i++，会不会丢失更新？为什么？",
+      "answer": "会。volatile 保证可见性和相关顺序约束，但 i++ 由读取、计算和写入组成，整体并非原子操作，线程可能覆盖彼此的更新。可用原子类的自增或同一把锁保护操作。",
+      "expectedStates": {
+        "atomicity": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v1-incorrect",
+      "questionId": "v1",
+      "topicId": "java.volatile",
+      "question": "多个线程共享一个 volatile int 计数器，并执行 i++，会不会丢失更新？为什么？",
+      "answer": "不会。volatile 会自动把读取、计算、写入合并成一个原子操作，多线程自增不会丢失更新。",
+      "expectedStates": {
+        "atomicity": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v1-unknown",
+      "questionId": "v1",
+      "topicId": "java.volatile",
+      "question": "多个线程共享一个 volatile int 计数器，并执行 i++，会不会丢失更新？为什么？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "atomicity": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v2-correct",
+      "questionId": "v2",
+      "topicId": "java.volatile",
+      "question": "为什么已经把字段声明成 volatile，有时仍需要锁或原子类？",
+      "answer": "volatile 的可见性和顺序保证不等于复合更新的原子性。像 i++ 的读改写必须作为整体同步，才能避免并发更新丢失，因此仍可使用锁或原子类。",
+      "expectedStates": {
+        "atomicity": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v2-incorrect",
+      "questionId": "v2",
+      "topicId": "java.volatile",
+      "question": "为什么已经把字段声明成 volatile，有时仍需要锁或原子类？",
+      "answer": "volatile 已经保证所有涉及该字段的代码整体原子执行，所以原子类与锁在任何情况下都是多余的。",
+      "expectedStates": {
+        "atomicity": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v2-unknown",
+      "questionId": "v2",
+      "topicId": "java.volatile",
+      "question": "为什么已经把字段声明成 volatile，有时仍需要锁或原子类？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "atomicity": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v3-correct",
+      "questionId": "v3",
+      "topicId": "java.volatile",
+      "question": "volatile 的可见性保证是否意味着读取后计算再写回一定不可被其他线程穿插？",
+      "answer": "不意味着。volatile 写 happens-before 后续读，但由读、计算、写构成的复合操作并不因此原子化，其他线程仍可能穿插。",
+      "expectedStates": {
+        "atomicity": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v3-incorrect",
+      "questionId": "v3",
+      "topicId": "java.volatile",
+      "question": "volatile 的可见性保证是否意味着读取后计算再写回一定不可被其他线程穿插？",
+      "answer": "意味着。只要读和写针对同一个 volatile 字段，中间的任意计算也都会与它们构成单个原子操作。",
+      "expectedStates": {
+        "atomicity": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v3-unknown",
+      "questionId": "v3",
+      "topicId": "java.volatile",
+      "question": "volatile 的可见性保证是否意味着读取后计算再写回一定不可被其他线程穿插？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "atomicity": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v4-correct",
+      "questionId": "v4",
+      "topicId": "java.volatile",
+      "question": "有人说共享计数器已经使用 volatile，所以并发自增不需要额外处理。你如何评价？",
+      "answer": "这把可见性与原子性混淆了。volatile 不能让 i++ 的三个步骤原子执行，并发时仍可能丢失更新；需要锁或符合语义的原子类。",
+      "expectedStates": {
+        "atomicity": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v4-incorrect",
+      "questionId": "v4",
+      "topicId": "java.volatile",
+      "question": "有人说共享计数器已经使用 volatile，所以并发自增不需要额外处理。你如何评价？",
+      "answer": "这个判断正确，因为 volatile 的顺序约束使整个 i++ 自动具有原子性，绝不会出现更新丢失。",
+      "expectedStates": {
+        "atomicity": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v4-unknown",
+      "questionId": "v4",
+      "topicId": "java.volatile",
+      "question": "有人说共享计数器已经使用 volatile，所以并发自增不需要额外处理。你如何评价？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "atomicity": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v5-correct",
+      "questionId": "v5",
+      "topicId": "java.volatile",
+      "question": "volatile 字段的写与后续读有什么关系？这是否足以保证复合更新正确？",
+      "answer": "写 happens-before 后续读，因此有可见性及相关顺序保证。但这不使 i++ 的读取、计算和写入成为原子整体，所以不够，还需锁或原子操作。",
+      "expectedStates": {
+        "atomicity": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v5-incorrect",
+      "questionId": "v5",
+      "topicId": "java.volatile",
+      "question": "volatile 字段的写与后续读有什么关系？这是否足以保证复合更新正确？",
+      "answer": "volatile 的写对后续读取没有任何可见性保证，但它可以单独保证所有读改写复合操作的原子性。",
+      "expectedStates": {
+        "atomicity": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "v5-unknown",
+      "questionId": "v5",
+      "topicId": "java.volatile",
+      "question": "volatile 字段的写与后续读有什么关系？这是否足以保证复合更新正确？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "atomicity": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h1-correct",
+      "questionId": "h1",
+      "topicId": "java.equals-hashcode",
+      "question": "两个对象 hashCode 相同，可以断定 equals 相等吗？",
+      "answer": "不能，哈希值相同可能发生碰撞。契约要求的是 equals 相等必须具有相同 hashCode，反向不成立。",
+      "expectedStates": {
+        "contract": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h1-incorrect",
+      "questionId": "h1",
+      "topicId": "java.equals-hashcode",
+      "question": "两个对象 hashCode 相同，可以断定 equals 相等吗？",
+      "answer": "可以，hashCode 是对象的唯一标识，只要相同，equals 就必须相等。",
+      "expectedStates": {
+        "contract": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h1-unknown",
+      "questionId": "h1",
+      "topicId": "java.equals-hashcode",
+      "question": "两个对象 hashCode 相同，可以断定 equals 相等吗？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "contract": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h2-correct",
+      "questionId": "h2",
+      "topicId": "java.equals-hashcode",
+      "question": "重写 equals 后，为什么通常也需要重写 hashCode？",
+      "answer": "为了维持 equals 相等的对象必须具有相同 hashCode 的契约，否则会破坏散列集合行为；但 hashCode 相同不意味着 equals 相等。",
+      "expectedStates": {
+        "contract": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h2-incorrect",
+      "questionId": "h2",
+      "topicId": "java.equals-hashcode",
+      "question": "重写 equals 后，为什么通常也需要重写 hashCode？",
+      "answer": "只要重写 equals，就无需考虑 hashCode。两个 equals 相等的对象可以任意返回不同的 hashCode。",
+      "expectedStates": {
+        "contract": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h2-unknown",
+      "questionId": "h2",
+      "topicId": "java.equals-hashcode",
+      "question": "重写 equals 后，为什么通常也需要重写 hashCode？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "contract": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h3-correct",
+      "questionId": "h3",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 的对称性和与 null 比较的约定是什么？",
+      "answer": "对非空对象，若 a.equals(b) 为真，则 b.equals(a) 也应为真；任何非空对象的 equals(null) 应为 false。",
+      "expectedStates": {
+        "contract": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h3-incorrect",
+      "questionId": "h3",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 的对称性和与 null 比较的约定是什么？",
+      "answer": "equals 不要求对称，a.equals(b) 为真时 b.equals(a) 可以为假；非空对象 equals(null) 通常应返回 true。",
+      "expectedStates": {
+        "contract": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h3-unknown",
+      "questionId": "h3",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 的对称性和与 null 比较的约定是什么？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "contract": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h4-correct",
+      "questionId": "h4",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 应满足怎样的自反性和传递性？",
+      "answer": "非空对象应与自身相等；若 a 与 b 相等且 b 与 c 相等，则 a 与 c 也应相等，还应满足对称、一致及与 null 比较为 false。",
+      "expectedStates": {
+        "contract": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h4-incorrect",
+      "questionId": "h4",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 应满足怎样的自反性和传递性？",
+      "answer": "equals 可以让对象与自身不相等，也允许 a 等于 b、b 等于 c，但 a 不等于 c。",
+      "expectedStates": {
+        "contract": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h4-unknown",
+      "questionId": "h4",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 应满足怎样的自反性和传递性？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "contract": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h5-correct",
+      "questionId": "h5",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 相等但 hashCode 不同，是否符合 Java Object 的契约？",
+      "answer": "不符合。equals 相等必须有相同 hashCode；只有 hashCode 相同但 equals 不相等才是允许的碰撞情况。",
+      "expectedStates": {
+        "contract": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h5-incorrect",
+      "questionId": "h5",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 相等但 hashCode 不同，是否符合 Java Object 的契约？",
+      "answer": "符合。契约只要求 hashCode 相同时 equals 必须为真，equals 相等时 hashCode 则可以不同。",
+      "expectedStates": {
+        "contract": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "h5-unknown",
+      "questionId": "h5",
+      "topicId": "java.equals-hashcode",
+      "question": "equals 相等但 hashCode 不同，是否符合 Java Object 的契约？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "contract": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m1-correct",
+      "questionId": "m1",
+      "topicId": "mysql.isolation",
+      "question": "MySQL 8.0 InnoDB 支持哪些事务隔离级别？默认是哪一个？",
+      "answer": "支持 READ UNCOMMITTED、READ COMMITTED、REPEATABLE READ、SERIALIZABLE；默认 REPEATABLE READ。",
+      "expectedStates": {
+        "levels": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m1-incorrect",
+      "questionId": "m1",
+      "topicId": "mysql.isolation",
+      "question": "MySQL 8.0 InnoDB 支持哪些事务隔离级别？默认是哪一个？",
+      "answer": "InnoDB 只支持 READ COMMITTED 和 SERIALIZABLE，默认 READ COMMITTED。",
+      "expectedStates": {
+        "levels": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m1-unknown",
+      "questionId": "m1",
+      "topicId": "mysql.isolation",
+      "question": "MySQL 8.0 InnoDB 支持哪些事务隔离级别？默认是哪一个？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "levels": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m2-correct",
+      "questionId": "m2",
+      "topicId": "mysql.isolation",
+      "question": "InnoDB 可重复读事务中的普通一致性读，每次都重新建立快照吗？",
+      "answer": "不是。可重复读下，同一事务的普通一致性读使用首次一致性读建立的快照，不能把普通快照读与锁定读混为一谈。",
+      "expectedStates": {
+        "levels": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m2-incorrect",
+      "questionId": "m2",
+      "topicId": "mysql.isolation",
+      "question": "InnoDB 可重复读事务中的普通一致性读，每次都重新建立快照吗？",
+      "answer": "是。REPEATABLE READ 的普通一致性读每次都强制创建新快照，必然看到其他事务最新提交的数据。",
+      "expectedStates": {
+        "levels": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m2-unknown",
+      "questionId": "m2",
+      "topicId": "mysql.isolation",
+      "question": "InnoDB 可重复读事务中的普通一致性读，每次都重新建立快照吗？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "levels": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m3-correct",
+      "questionId": "m3",
+      "topicId": "mysql.isolation",
+      "question": "分析 InnoDB 的幻读时，为什么要区分普通一致性读与锁定读？",
+      "answer": "它们的语义不同。可重复读的普通一致性读使用首次读的快照，而范围锁定操作可能使用 gap 或 next-key locking，因此应说明数据库版本和读取类型。",
+      "expectedStates": {
+        "levels": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m3-incorrect",
+      "questionId": "m3",
+      "topicId": "mysql.isolation",
+      "question": "分析 InnoDB 的幻读时，为什么要区分普通一致性读与锁定读？",
+      "answer": "两者完全相同，都是每次重新创建相同类型的快照；锁定读绝不涉及 gap 或 next-key locking，所以无需区分。",
+      "expectedStates": {
+        "levels": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m3-unknown",
+      "questionId": "m3",
+      "topicId": "mysql.isolation",
+      "question": "分析 InnoDB 的幻读时，为什么要区分普通一致性读与锁定读？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "levels": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m4-correct",
+      "questionId": "m4",
+      "topicId": "mysql.isolation",
+      "question": "InnoDB 范围锁定操作可能使用哪些锁？能否直接等同于普通快照读？",
+      "answer": "可能使用 gap 或 next-key locking；范围锁定和普通一致性读不是同一种语义，可重复读的一致性读通常复用事务首次读取的快照。",
+      "expectedStates": {
+        "levels": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m4-incorrect",
+      "questionId": "m4",
+      "topicId": "mysql.isolation",
+      "question": "InnoDB 范围锁定操作可能使用哪些锁？能否直接等同于普通快照读？",
+      "answer": "范围锁定操作不可能使用间隙锁或 next-key 锁，它与普通快照读完全等同，全部仅靠新建快照工作。",
+      "expectedStates": {
+        "levels": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m4-unknown",
+      "questionId": "m4",
+      "topicId": "mysql.isolation",
+      "question": "InnoDB 范围锁定操作可能使用哪些锁？能否直接等同于普通快照读？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "levels": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m5-correct",
+      "questionId": "m5",
+      "topicId": "mysql.isolation",
+      "question": "讨论 MySQL 隔离级别时，能否只凭泛化标准判断所有实现的幻读行为？",
+      "answer": "不能。应明确 MySQL 8.0 InnoDB 等版本实现和读的类型，普通一致性读的快照与范围锁定的 gap/next-key locking 语义不同。",
+      "expectedStates": {
+        "levels": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m5-incorrect",
+      "questionId": "m5",
+      "topicId": "mysql.isolation",
+      "question": "讨论 MySQL 隔离级别时，能否只凭泛化标准判断所有实现的幻读行为？",
+      "answer": "可以。所有数据库实现和所有读操作的语义都完全一样，隔离级别一旦相同就无需考虑数据库版本、快照或锁定读。",
+      "expectedStates": {
+        "levels": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "m5-unknown",
+      "questionId": "m5",
+      "topicId": "mysql.isolation",
+      "question": "讨论 MySQL 隔离级别时，能否只凭泛化标准判断所有实现的幻读行为？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "levels": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c1-correct",
+      "questionId": "c1",
+      "topicId": "redis.cache-failures",
+      "question": "缓存穿透、击穿和雪崩的触发条件各是什么？",
+      "answer": "穿透是反复请求缓存与数据源都不存在的数据；击穿是热点缓存失效引发并发回源；雪崩是大量缓存同时失效等造成集中回源。",
+      "expectedStates": {
+        "failure-distinction": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c1-incorrect",
+      "questionId": "c1",
+      "topicId": "redis.cache-failures",
+      "question": "缓存穿透、击穿和雪崩的触发条件各是什么？",
+      "answer": "穿透指大量已有缓存同时到期，击穿指反复查询从不存在的数据，而雪崩只指单个热点键过期。",
+      "expectedStates": {
+        "failure-distinction": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c1-unknown",
+      "questionId": "c1",
+      "topicId": "redis.cache-failures",
+      "question": "缓存穿透、击穿和雪崩的触发条件各是什么？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "failure-distinction": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c2-correct",
+      "questionId": "c2",
+      "topicId": "redis.cache-failures",
+      "question": "大量请求一个缓存和数据库都不存在的键，可以怎样减少回源？",
+      "answer": "这是缓存穿透，可以使用空值缓存或布隆过滤器，减少对不存在数据的重复回源。",
+      "expectedStates": {
+        "mitigation": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c2-incorrect",
+      "questionId": "c2",
+      "topicId": "redis.cache-failures",
+      "question": "大量请求一个缓存和数据库都不存在的键，可以怎样减少回源？",
+      "answer": "只要把所有已有缓存设置成相同过期时间，就能解决不存在数据的缓存穿透；空值缓存或布隆过滤器对此完全无效。",
+      "expectedStates": {
+        "mitigation": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c2-unknown",
+      "questionId": "c2",
+      "topicId": "redis.cache-failures",
+      "question": "大量请求一个缓存和数据库都不存在的键，可以怎样减少回源？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "mitigation": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c3-correct",
+      "questionId": "c3",
+      "topicId": "redis.cache-failures",
+      "question": "热点键失效后大量并发请求回源，你会采用什么策略？",
+      "answer": "这是缓存击穿，可通过热点互斥重建或请求合并控制并发回源，避免所有请求同时重建缓存。",
+      "expectedStates": {
+        "mitigation": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c3-incorrect",
+      "questionId": "c3",
+      "topicId": "redis.cache-failures",
+      "question": "热点键失效后大量并发请求回源，你会采用什么策略？",
+      "answer": "应该让所有请求同时独立查询数据库重建缓存，这样一定能减少回源压力；互斥重建和请求合并不会起作用。",
+      "expectedStates": {
+        "mitigation": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c3-unknown",
+      "questionId": "c3",
+      "topicId": "redis.cache-failures",
+      "question": "热点键失效后大量并发请求回源，你会采用什么策略？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "mitigation": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c4-correct",
+      "questionId": "c4",
+      "topicId": "redis.cache-failures",
+      "question": "大量缓存同时过期造成集中回源，可以如何缓解？",
+      "answer": "这是缓存雪崩，可分散过期时间，并结合限流与降级，减少集中过期带来的回源压力。",
+      "expectedStates": {
+        "mitigation": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c4-incorrect",
+      "questionId": "c4",
+      "topicId": "redis.cache-failures",
+      "question": "大量缓存同时过期造成集中回源，可以如何缓解？",
+      "answer": "为了避免雪崩，应让所有缓存在完全相同的时刻过期，并关闭限流与降级，这会减少集中回源。",
+      "expectedStates": {
+        "mitigation": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c4-unknown",
+      "questionId": "c4",
+      "topicId": "redis.cache-failures",
+      "question": "大量缓存同时过期造成集中回源，可以如何缓解？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "mitigation": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c5-correct",
+      "questionId": "c5",
+      "topicId": "redis.cache-failures",
+      "question": "单个热点键失效，与大量缓存同时失效的情况有什么区别？",
+      "answer": "前者通常称缓存击穿，热点失效引发并发回源；后者可能引发缓存雪崩，大量缓存同时失效造成集中回源，触发范围不同。",
+      "expectedStates": {
+        "failure-distinction": [
+          "COVERED"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c5-incorrect",
+      "questionId": "c5",
+      "topicId": "redis.cache-failures",
+      "question": "单个热点键失效，与大量缓存同时失效的情况有什么区别？",
+      "answer": "它们没有区别，缓存雪崩永远只指一个热点键过期，大量缓存同时失效不会导致集中回源。",
+      "expectedStates": {
+        "failure-distinction": [
+          "INCORRECT"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    },
+    {
+      "id": "c5-unknown",
+      "questionId": "c5",
+      "topicId": "redis.cache-failures",
+      "question": "单个热点键失效，与大量缓存同时失效的情况有什么区别？",
+      "answer": "这部分知识我还没有掌握，暂时无法回答。",
+      "expectedStates": {
+        "failure-distinction": [
+          "NOT_OBSERVED",
+          "UNCERTAIN"
+        ]
+      },
+      "reviewer": "",
+      "reviewedAt": "",
+      "reviewNotes": ""
+    }
+  ]
+}

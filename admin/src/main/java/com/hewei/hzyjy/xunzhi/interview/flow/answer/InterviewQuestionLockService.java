@@ -45,7 +45,9 @@ public class InterviewQuestionLockService {
     public RLock acquireAdaptive(String sessionId) throws InterruptedException {
         if (StrUtil.isBlank(sessionId)) return null;
         RLock lock = redissonClient.getLock(lockKey(sessionId, "adaptive-session"));
-        return lock.tryLock(resolveWaitMillis(), -1L, TimeUnit.MILLISECONDS) ? lock : null;
+        Long configured = configuration.getAdaptiveLockWaitMillis();
+        long waitMillis = configured == null || configured < 0 ? 2000L : configured;
+        return lock.tryLock(waitMillis, -1L, TimeUnit.MILLISECONDS) ? lock : null;
     }
 
     private String lockKey(String sessionId, String questionNumber) {

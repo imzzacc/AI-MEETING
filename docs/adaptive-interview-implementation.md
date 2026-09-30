@@ -27,7 +27,7 @@ spec 中的计划、策略、证据、决策和报告任务是逻辑模型。本
 
 这是本地版本化、关键词/知识点过滤的 RAG，不依赖付费 embedding 或向量数据库。最多映射 5 个主题、给模型 6 段资料，每段最多 2000 字符；单主题候选最多 5 个。不匹配的题目仍正常评分，但不编造知识结论或候选。Redis 故障术语是编辑归纳，不能称为官方逐字原文。
 
-更新目录时应审核资料适用的岗位、技术版本、候选措辞和评分点，递增目录版本。当前目录版本为 `java-starter-v2`，包含每个知识点的岗位及技术版本白名单。会话保存过滤后的完整快照及内容哈希，已有会话不随文件更新改变。
+更新目录时应审核资料适用的岗位、技术版本、候选措辞和评分点，递增目录版本。当前目录版本为 `java-starter-v3`，包含每个知识点的岗位及技术版本白名单，并补充明确的快照读、锁定读和缓存失效术语。会话保存过滤后的完整快照及内容哈希，已有会话不随文件更新改变；此版本的资料与映射仍待人工审核。
 
 前端在上传简历前选择岗位、Java / MySQL 版本。`PUT /sessions/{id}/policy` 的可选 `retrievalScope` 为 `{"role":"java-backend","technologyVersions":{"java":"17","mysql":"8.0","redis":"general-v1"}}`；省略时沿用这组默认范围。配置完成后范围冻结，不允许后续请求扩大范围。其他岗位或未列入目录的版本只关闭受影响知识点的检索与追问，保持所有主问题。遗漏版本按不适用处理，排除原因 `ROLE_MISMATCH` / `TECHNOLOGY_VERSION_MISMATCH` / `KNOWLEDGE_SCOPE_MISSING` 随决策保存。目录缺少范围元数据时启动校验失败。
 
@@ -37,7 +37,7 @@ spec 中的计划、策略、证据、决策和报告任务是逻辑模型。本
 
 新增场景 `interview-grounded-evaluation` 默认绑定 `Grounded Interview Evaluator v1`。**不要绑定原“用户答案评分官”**：它的输出缺少知识证据，且会把新输入当作普通回答。
 
-导入 `admin/src/main/resources/workflow/grounded-interview-evaluator-v1.yml` 到实际使用的讯飞工作流平台，选择账号已开通 API 权限且有额度的模型，并登记该工作流的凭据与 flow ID。2026-09-30 已在个人账号用 Spark Pro-128k 完成网页调试、更新 API 配置和绑定，单条合成回答的真实 API 契约检查通过。模板中的模型配置仍是导入占位选择，不能据此推定其他账号具有模型权限。系统提示另存于 `docs/grounded-evaluator-system-prompt.txt` 供审核；修改时须同步 YAML。
+导入 `admin/src/main/resources/workflow/grounded-interview-evaluator-v1.yml` 到实际使用的讯飞工作流平台，选择账号已开通 API 权限且有额度的模型，并登记该工作流的凭据与 flow ID。2026-09-30 实际联调发现 Spark 的语义误判与 JSON 格式失败，已将新评分工作流改为 Qwen3-Next-80B-A3B-Instruct 并发布；原出题工作流未改动。六条真实语义 smoke 通过，60 条合成调试集的严格检查为 43/60，尚未通过正式质量验收。仓库随后补充了单评分点单条证据、原文引用及禁止虚构缺失要求的提示词；因浏览器锁屏，这次补充尚未发布，不能将本地模板与当前线上配置视为一致。模板中的模型配置仍是导入占位选择，不能据此推定其他账号具有模型权限。系统提示另存于 `docs/grounded-evaluator-system-prompt.txt` 供审核；修改时须同步 YAML。
 
 输入 `AGENT_USER_INPUT` 是一个 JSON 字符串，包含 `question`、`answer`、`rubrics`、`sources`；`question` 和 `resume_context` 兼容已有参数入口。输出必须是 JSON：
 
@@ -82,4 +82,4 @@ mongosh '实际Mongo连接URI/目标数据库' --file scripts/adaptive-indexes.j
 
 前端：`npm ci`、`npm run check`、`npm run build`。CI 同时运行前后端检查。本轮额外修正基线中缺失的测试构造参数、Mockito argLine、异步限流 mock、归档调用序列和语音测试的音频时间范围；未通过删用例来放行。
 
-详细数量和限制见 [验收记录](adaptive-interview-validation.md)。已执行一场真实HTTP面试及真实账号鉴权、浏览器报告与导出流程。60条人工审核评估、岗位/版本检索质量、各时长完整浏览器体验和新会话删除API的真实数据库清理验收仍需补齐；自动化通过不等于完整spec验收完成。
+详细数量和限制见 [验收记录](adaptive-interview-validation.md)。已执行一场真实HTTP面试及真实账号鉴权、浏览器报告与导出流程。60条人工审核评估、岗位/版本检索质量、各时长完整浏览器体验仍需补齐。会话删除的实际 Mongo/MySQL/Redis 清理已验证，首次 UI 删除暴露 Redisson 依赖冲突，修复后的后台补偿成功；直接 UI 成功删除仍需复验；自动化通过不等于完整spec验收完成。

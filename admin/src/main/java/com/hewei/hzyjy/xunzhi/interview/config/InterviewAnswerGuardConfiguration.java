@@ -42,4 +42,7 @@ public class InterviewAnswerGuardConfiguration {
      * Lock wait time in milliseconds.
      */
     private Long lockWaitMillis = 0L;
+
+    /** Bounded wait for brief adaptive snapshot, timer and question publication collisions. */
+    private Long adaptiveLockWaitMillis = 2000L;
 }

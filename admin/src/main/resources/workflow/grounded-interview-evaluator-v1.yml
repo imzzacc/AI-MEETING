@@ -244,6 +244,17 @@ flowData:
           Before returning JSON, check that state, quotes, rationale, score and feedback agree in meaning.
           Feedback must describe the answer as written; present corrections as corrections, never as praise
           for a statement the candidate did not make. A core misconception cannot receive full marks.
+
+          Emit exactly one observation for each provided rubric: combine its supporting answer quotes in
+          one list and make one evidence-based judgment. Never emit duplicate or conflicting observations
+          for the same rubric. Use NOT_OBSERVED for a rubric with no demonstrated knowledge, including an
+          explicit admission of not knowing; use an empty observations array only when no rubrics exist.
+          Every answerQuote must be a nonempty exact substring of the answer field, never the question,
+          reference text, or your paraphrase. If you cannot find an answer quote for a factual judgment,
+          use NOT_OBSERVED or UNCERTAIN instead of claiming COVERED, PARTIAL, or INCORRECT.
+          A PARTIAL judgment must name a specific requirement asked by the question and supported by the
+          provided references. Do not invent missing requirements or introduce unsupported technical
+          claims in rationale or feedback. If the references cannot establish a correction, say uncertain.
         respFormat: 0
       retryConfig:
         shouldRetry: false
