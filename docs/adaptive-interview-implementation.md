@@ -37,7 +37,7 @@ spec 中的计划、策略、证据、决策和报告任务是逻辑模型。本
 
 新增场景 `interview-grounded-evaluation` 默认绑定 `Grounded Interview Evaluator v1`。**不要绑定原“用户答案评分官”**：它的输出缺少知识证据，且会把新输入当作普通回答。
 
-导入 `admin/src/main/resources/workflow/grounded-interview-evaluator-v1.yml` 到实际使用的讯飞工作流平台，选择账号已开通 API 权限且有额度的模型，并登记该工作流的凭据与 flow ID。2026-09-30 实际联调发现 Spark 的语义误判与 JSON 格式失败，已将新评分工作流改为 Qwen3-Next-80B-A3B-Instruct 并发布；原出题工作流未改动。六条真实语义 smoke 通过，60 条合成调试集的严格检查为 43/60，尚未通过正式质量验收。仓库随后补充了单评分点单条证据、原文引用及禁止虚构缺失要求的提示词；因浏览器锁屏，这次补充尚未发布，不能将本地模板与当前线上配置视为一致。模板中的模型配置仍是导入占位选择，不能据此推定其他账号具有模型权限。系统提示另存于 `docs/grounded-evaluator-system-prompt.txt` 供审核；修改时须同步 YAML。
+导入 `admin/src/main/resources/workflow/grounded-interview-evaluator-v1.yml` 到实际使用的讯飞工作流平台，选择账号已开通 API 权限且有额度的模型，并登记该工作流的凭据与 flow ID。2026-09-30 实际联调发现 Spark 的语义误判与 JSON 格式失败，已将新评分工作流改为 Qwen3-Next-80B-A3B-Instruct 并发布；原出题工作流未改动。六条真实语义 smoke 通过，60 条合成调试集的严格检查为 43/60，尚未通过正式质量验收。仓库随后补充了单评分点单条证据、原文引用及禁止虚构缺失要求的提示词，19:06后已在讯飞发布并更新绑定，最终编辑器全文与仓库提示一致。13条有限回归通过12条，MySQL案例仍有资料不支持的解释；追加通用规则实验未解决问题，已恢复简洁修正版，恢复后单条API通过。详情及原始失败见 `docs/evals/prompt-publication-20260930/README.md`，不能将此次发布视为正式质量验收通过。模板中的模型配置仍是导入占位选择，不能据此推定其他账号具有模型权限。系统提示另存于 `docs/grounded-evaluator-system-prompt.txt` 供审核；修改时须同步 YAML。
 
 输入 `AGENT_USER_INPUT` 是一个 JSON 字符串，包含 `question`、`answer`、`rubrics`、`sources`；`question` 和 `resume_context` 兼容已有参数入口。输出必须是 JSON：
 

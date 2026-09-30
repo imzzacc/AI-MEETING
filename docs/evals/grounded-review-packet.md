@@ -13,6 +13,8 @@ m3-correct 把题目当作回答引用，并加入资料不支持的幻读解释
 审核方式：逐项检查来源、问题要求、回答、建议状态和模型引用；在数据 JSON 中填写 reviewer、reviewedAt、
 reviewNotes 并修正 expectedStates。完成真实审核前保留 humanReviewed=false；不要由助手代填人审状态。
 
+后续：最终提示词已于同日19时发布，有限回归及未解决问题见[发布记录](prompt-publication-20260930/README.md)。原60条已用于调试，仍不能作为独立验收集。
+
 ## 资料与候选审核
 
 ### redis.cache-failures
