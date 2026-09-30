@@ -61,6 +61,7 @@ class AdaptiveSessionDeletionTest {
         assertNull(marker.getPending()); assertNull(marker.getReportMarkdown());
         assertNull(marker.getCatalog()); assertTrue(marker.getQuestions().isEmpty()); assertTrue(marker.getTurns().isEmpty());
         assertNull(store.findMistake("m")); verify(erasure, times(1)).erase("s", 1L);
+        verify(erasure, times(1)).eraseReview("m");
         assertThrows(ClientException.class, () -> deletion.delete("s", 2L));
     }
 
@@ -70,6 +71,15 @@ class AdaptiveSessionDeletionTest {
         assertTrue(store.find("s").isDeleted()); assertFalse(store.find("s").isDeletionComplete());
         assertThrows(ClientException.class, () -> interviews.owned("s", 1L));
         deletion.retryPending(); assertTrue(store.find("s").isDeletionComplete());
+    }
+
+    @Test void failedReviewCleanupKeepsSourceLinkForRetry() {
+        mistake("m", "s");
+        doThrow(new IllegalStateException("cache unavailable")).doNothing().when(erasure).eraseReview("m");
+        assertThrows(IllegalStateException.class, () -> deletion.delete("s", 1L));
+        assertEquals(Set.of("s"), store.findMistake("m").getSessionIds());
+        deletion.retryPending(); assertNull(store.findMistake("m"));
+        assertTrue(store.find("s").isDeletionComplete());
     }
 
     @Test void retainsOtherSessionEvidenceAndIndependentPractice() {

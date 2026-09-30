@@ -50,6 +50,9 @@ public class AdaptiveSessionDeletionService {
             interviews.locked("mistake-" + candidate.getId(), () -> {
                 Mistake m = store.findMistake(candidate.getId());
                 if (m == null || !Objects.equals(m.getUserId(), userId)) return null;
+                // Hold the same lock as practice publication. Erase before removing the
+                // source link, so a failed cleanup remains discoverable on the next retry.
+                erasure.eraseReview(m.getId());
                 m.getSessionIds().remove(id);
                 m.getEvidence().removeIf(e -> id.equals(e.sessionId()));
                 boolean removedPractice = m.getPractices().removeIf(p -> p.sourceSessionId() == null

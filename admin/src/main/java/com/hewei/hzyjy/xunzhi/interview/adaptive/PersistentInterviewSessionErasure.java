@@ -52,6 +52,18 @@ public class PersistentInterviewSessionErasure implements InterviewSessionErasur
                 InterviewCacheKeys.sessionScoreCount(id), InterviewCacheKeys.demeanorPanic(id),
                 InterviewCacheKeys.demeanorSeriousness(id), InterviewCacheKeys.demeanorEmoticon(id),
                 InterviewCacheKeys.demeanorComposite(id)));
+        eraseModelSession(id);
+    }
+
+    public void eraseReview(String mistakeId) {
+        String id = "review-" + mistakeId;
+        Query conversations = Query.query(Criteria.where("sessionId").in(id, id + "_grounded"));
+        mongo.remove(conversations, "agent_message");
+        mongo.remove(conversations, "agent_conversation");
+        eraseModelSession(id);
+    }
+
+    private void eraseModelSession(String id) {
         // Scan only result/meta namespaces. Match a complete session field and never touch locks.
         for (String prefix : List.of("ai:flight:result:", "ai:flight:meta:")) {
             try (var keys = redis.scan(ScanOptions.scanOptions().match(prefix + "*").count(100).build())) {
