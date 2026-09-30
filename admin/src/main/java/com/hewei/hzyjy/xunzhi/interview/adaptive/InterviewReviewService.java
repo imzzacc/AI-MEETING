@@ -385,10 +385,11 @@ public class InterviewReviewService {
                         throw new ClientException("Practice history limit reached");
                     if (m.getSessionIds().isEmpty())
                         throw new ClientException("Review reference unavailable");
+                    String sourceSessionId = m.getSessionIds().iterator().next();
                     List<Topic> topics =
                             InterviewKnowledgeCatalog.retrieve(
                                     interviews
-                                            .owned(m.getSessionIds().iterator().next(), userId)
+                                            .owned(sourceSessionId, userId)
                                             .getCatalog(),
                                     List.of(m.getKnowledgePointId()));
                     if (topics.isEmpty()) throw new ClientException("Review reference unavailable");
@@ -400,6 +401,9 @@ public class InterviewReviewService {
                                     answer,
                                     topics,
                                     InterviewKnowledgeCatalog.sources(topics));
+                    // A session can be tombstoned while the model is running. Never publish
+                    // practice feedback derived from a source whose deletion has started.
+                    ownedMistake(id, userId);
                     boolean correct =
                             result.observations().stream()
                                     .anyMatch(
@@ -427,7 +431,8 @@ public class InterviewReviewService {
                                             answer,
                                             clock.millis(),
                                             result,
-                                            correct));
+                                            correct,
+                                            sourceSessionId));
                     if (wrong) {
                         m.setStatus("TO_REVIEW");
                         m.setMasterySource(null);

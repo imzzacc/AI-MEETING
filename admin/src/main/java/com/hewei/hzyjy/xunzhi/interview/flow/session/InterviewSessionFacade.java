@@ -172,6 +172,13 @@ public class InterviewSessionFacade {
     }
 
     public InterviewSessionRestoreRespDTO restoreInterviewSession(String sessionId, Long userId) {
+        if (adaptive != null && adaptive.active(sessionId)) {
+            return adaptive.locked(sessionId, () -> restoreOwnedInterviewSession(sessionId, userId));
+        }
+        return restoreOwnedInterviewSession(sessionId, userId);
+    }
+
+    private InterviewSessionRestoreRespDTO restoreOwnedInterviewSession(String sessionId, Long userId) {
         // 1) 先恢复会话主信息（状态、简历、方向等主字段）。
         InterviewSession session = interviewSessionService.requireOwnedSession(sessionId, userId);
         runtimeRehydrateService.ensureRuntime(sessionId, InterviewRuntimeLoadMode.READ_ONLY, InterviewRuntimeRehydrateScope.MATERIAL_ONLY);

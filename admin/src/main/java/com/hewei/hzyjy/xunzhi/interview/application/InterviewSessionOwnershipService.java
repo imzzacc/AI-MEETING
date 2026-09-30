@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class InterviewSessionOwnershipService {
 
     private final InterviewSessionRepository interviewSessionRepository;
+    private final com.hewei.hzyjy.xunzhi.interview.adaptive.AdaptiveSessionStore adaptiveStore;
 
     public InterviewSession requireOwnedSession(String sessionId, Long userId) {
         if (StrUtil.isBlank(sessionId)) {
@@ -20,6 +21,10 @@ public class InterviewSessionOwnershipService {
         }
         if (userId == null || userId <= 0) {
             throw new ClientException(InterviewErrorCodeEnum.INVALID_USER_ID);
+        }
+        var adaptive = adaptiveStore.find(sessionId);
+        if (adaptive != null && adaptive.isDeleted()) {
+            throw new ClientException(InterviewErrorCodeEnum.INTERVIEW_SESSION_NOT_FOUND);
         }
         InterviewSession session = interviewSessionRepository.findBySessionIdAndDelFlag(sessionId, 0)
                 .orElseThrow(() -> new ClientException(InterviewErrorCodeEnum.INTERVIEW_SESSION_NOT_FOUND));

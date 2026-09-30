@@ -2,7 +2,7 @@
 
 更新日期：2026-09-30。分支：`feature/adaptive-interview-rag`，基线：`main@be2e9d799ee943a53eaecd9806cf0daa57338255`。
 
-状态：本地实现与自动化验证阶段。2026-09-30 后端复验 136 项单元/服务测试、3 项真实 Mongo 集成测试全部通过；前端沿用 2026-09-29 未变更代码的 99 项通过记录，均为 0 失败、0 跳过。新增评分工作流单条真实 API 契约检查已通过。尚未满足完整 spec 的合并条件，功能默认关闭，main 未合并。
+状态：本地实现与真实联调阶段。2026-09-30 16:23:47 后端最终复验142项单元/服务、6项真实Mongo测试全部通过；前端99项测试通过，lint、类型检查、构建成功。首场完整HTTP面试及浏览器报告流程已运行，评分语义回归6/6通过。尚未满足完整spec合并条件，功能默认关闭，main未合并。
 
 ## 环境与测试入口
 
@@ -38,6 +38,22 @@
 5. 岗位/版本选择器及检索白名单现已补齐，首批仍只覆盖 Java 后端、Java 17 / MySQL 8.0 与通用缓存模式。知识库上传审核界面及完整会话删除入口尚未完成。在线检索使用本地目录方案，不能把未完成的管理能力描述成已交付。
 
 这些缺口没有用 mock、skip 或构建成功替代。分支可以供 review，但不能据此称“完整功能已验证无问题”或合入 main。
+
+## 2026-09-30 真实面试与评分修复进展
+
+以下记录更新上方初始验收缺口：在隔离应用18002、专用MySQL/Redis及Mongo库中，真实注册登录、上传合成PDF、原工作流生成10道主问题、回答全部主问题和一次MySQL追问、自动结束已实际完成。每轮核对主问题map不变；同requestId回放一致、正文冲突拒绝、刷新计时不变、第二账号读取报告被拒绝。报告SUCCEEDED，Markdown 5,192字符，产生2条错题（MySQL追问后补全、缓存待复习）。这是HTTP E2E，未替代浏览器完整面试或语音验收。
+
+该场同时暴露质量失败：Spark Pro-128k将“volatile能保证i++原子性”的明确错误回答判100分/COVERED，反馈还错误声称用户解释了非原子性。结构校验不能识别此语义矛盾。因此该场不作为质量验收通过。增加通用“候选人实际断言与来源事实逐条比较、保留否定与条件、禁止把参考答案归功于候选人”的提示后，Spark网页调试又输出非法JSON，也记录为失败。
+
+仅新评分工作流切换Qwen3-Next-80B-A3B-Instruct，更新API配置及绑定；中文错误样例调试与API契约通过。`docs/evals/grounded-semantic-smoke.json` 六条真实API样例全部通过，涵盖正确/错误/不知道及嵌入指令。样例由助手编写，**未人工审核，不是正式20题/60条验收集**。保留脚本和逐条输出供复核，不用单一模型分数替代语义审核。
+
+用量：此前3,818 + 首场出题/评分11,085 + Spark新提示调试1,161 + Qwen网页1,048 + Qwen API契约991 + 六条回归5,979 = 已知24,082 token。预算仍为本轮累计人民币5元，未充值或购买套餐，尚未核对实际账单金额。
+
+本机证据位于个人temp目录：`e2e-completed-interview.json`、`e2e-report-and-mistakes.json`、`e2e-provider-usage.json`、`grounded-qwen-contract.json`、`grounded-qwen-semantic-smoke.json`。全部为合成资料；账号令牌配置单独保存在仓库外，不随证据提交。
+
+新增删除与来源竞态回归6项、Mongo投影删除及不同范围同缺口持久化2项。最终 `spotless:apply clean verify` 为142+6项，0失败/跳过，日志 `adaptive-deletion-final-verify.log`。最初前端 `npm run check` 的lint、TypeScript通过，Vitest部分worker启动超时；完整范围以 `npm run test:run -- --maxWorkers=2` 重跑22文件99项全通过，无过滤/跳过；`npm run build` 成功。日志 `deletion-frontend-tests-2workers.log`、`deletion-frontend-build.log`，原失败日志保留。
+
+独立headless Edge从真实登录页面开始，面经渲染、Markdown下载（5,192字符）、错题搜索和删除二次确认取消通过，无页面异常。该浏览器测试使用首场既有HTTP面试结果，尚非从浏览器上传到答题结束的完整E2E。证据 `browser-review-e2e-result.json`、`browser-review-e2e.png`、`browser-exported-review.md`。新删除API的真实HTTP/数据库清理验收仍待运行。
 
 ## 凭据核查补充
 

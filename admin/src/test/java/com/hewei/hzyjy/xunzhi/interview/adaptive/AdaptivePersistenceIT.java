@@ -185,4 +185,62 @@ class AdaptivePersistenceIT {
         assertEquals(0, store.mistakes(7L, 0, 20, "MASTERED", "").size());
         assertEquals(0, store.mistakes(7L, 0, 20, null, ".*").size());
     }
+
+    @Test
+    void sameGapInDifferentScopesCanPersistButSameIdentityCannotDuplicate() {
+        for (String scope : List.of("java17", "java21")) {
+            Mistake m = new Mistake(); m.setId("user7-volatile-atomicity-" + scope);
+            m.setUserId(7L); m.setKnowledgePointId("java.volatile");
+            m.setGapKey("atomicity"); m.setType("CONCEPT_ERROR");
+            store.saveMistake(m);
+        }
+        assertEquals(2, store.mistakes(7L, 0, 20, null, null).size());
+        var stale = store.findMistake("user7-volatile-atomicity-java17");
+        var fresh = store.findMistake(stale.getId()); fresh.setNote("new revision"); store.saveMistake(fresh);
+        assertThrows(OptimisticLockingFailureException.class, () -> store.saveMistake(stale));
+    }
+
+    @Test
+    void deletionRemovesOnlyOwnedSessionProjectionsAndPersistsRetryMarker() {
+        var session = create();
+        session.setDeleted(true);
+        store.save(session);
+        assertEquals(1, store.pendingDeletions().size());
+        for (String id : List.of("session", "other")) {
+            var base = new com.hewei.hzyjy.xunzhi.interview.dao.entity.InterviewSession();
+            base.setSessionId(id); base.setUserId(id.equals("session") ? 7L : 8L);
+            base.setDelFlag(0); base.setResumeFileUrl("private-file"); mongo.save(base);
+            for (String collection : List.of("interview_question", "interview_session_runtime_hot_snapshot",
+                    "interview_session_runtime_cold_snapshot", "interview_session_turn_archive", "agent_message", "agent_conversation")) {
+                mongo.getCollection(collection).insertOne(new org.bson.Document("sessionId", id).append("content", "private"));
+            }
+            Mistake m = new Mistake(); m.setId("m-" + id); m.setUserId(base.getUserId());
+            m.getSessionIds().add(id); store.saveMistake(m);
+        }
+        var redis = org.mockito.Mockito.mock(org.springframework.data.redis.core.StringRedisTemplate.class);
+        @SuppressWarnings("unchecked")
+        var cursor = (org.springframework.data.redis.core.Cursor<String>) org.mockito.Mockito.mock(org.springframework.data.redis.core.Cursor.class);
+        org.mockito.Mockito.when(redis.scan(org.mockito.ArgumentMatchers.any())).thenReturn(cursor);
+        var erasure = new PersistentInterviewSessionErasure(mongo,
+                org.mockito.Mockito.mock(com.hewei.hzyjy.xunzhi.interview.dao.mapper.InterviewRecordMapper.class),
+                org.mockito.Mockito.mock(com.hewei.hzyjy.xunzhi.agent.dao.mapper.AgentFileAssetMapper.class),
+                org.mockito.Mockito.mock(com.hewei.hzyjy.xunzhi.interview.service.cache.InterviewCacheStore.class),
+                redis, org.mockito.Mockito.mock(com.hewei.hzyjy.xunzhi.interview.application.guard.singleflight.cache.FlightReplayLocalCache.class));
+        erasure.erase("session", 7L);
+        erasure.erase("session", 7L);
+        for (String collection : List.of("interview_question", "interview_session_runtime_hot_snapshot",
+                "interview_session_runtime_cold_snapshot", "interview_session_turn_archive", "agent_message", "agent_conversation")) {
+            assertEquals(1, mongo.getCollection(collection).countDocuments());
+            assertEquals("other", mongo.getCollection(collection).find().first().getString("sessionId"));
+        }
+        var deleted = mongo.getCollection("interview_session").find(new org.bson.Document("sessionId", "session")).first();
+        assertEquals(1, deleted.getInteger("delFlag")); assertFalse(deleted.containsKey("resumeFileUrl"));
+        assertEquals(1, store.mistakesForSession("session", 7L).size());
+        assertTrue(store.mistakesForSession("session", 8L).isEmpty());
+        store.removeMistake("m-session", 8L); assertNotNull(store.findMistake("m-session"));
+        store.removeMistake("m-session", 7L); assertNull(store.findMistake("m-session"));
+        assertNotNull(store.findMistake("m-other"));
+        session = store.find("session"); session.setDeletionComplete(true); store.save(session);
+        assertTrue(store.pendingDeletions().isEmpty());
+    }
 }

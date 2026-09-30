@@ -24,6 +24,13 @@ import java.util.*;
 public class InterviewAdaptiveController {
     private final AdaptiveInterviewService interviews;
     private final InterviewReviewService reviews;
+    private final AdaptiveSessionDeletionService deletions;
+
+    @DeleteMapping("/sessions/{id}")
+    public Result<Void> deleteSession(@PathVariable String id, @CurrentUser UserContext user) {
+        deletions.delete(id, user.getUserId());
+        return Results.success();
+    }
 
     public record PolicyRequest(
             @Min(1200) @Max(2700) int targetDurationSeconds,

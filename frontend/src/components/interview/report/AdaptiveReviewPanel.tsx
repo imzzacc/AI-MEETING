@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/lib/constants";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
@@ -156,6 +158,11 @@ export default function AdaptiveReviewPanel({
 }: {
   sessionId: string;
 }) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
   const restore = useQuery({
     queryKey: ["adaptive-review-session", sessionId],
     queryFn: () =>
@@ -230,6 +237,50 @@ export default function AdaptiveReviewPanel({
       aria-label="面经与错题复习"
     >
       <h2 className="text-xl font-semibold">面经与错题复习</h2>
+      <div className="rounded border p-3">
+        {!confirmDelete ? (
+          <Button variant="outline" onClick={() => setConfirmDelete(true)}>
+            删除本场面试
+          </Button>
+        ) : (
+          <>
+            <p>
+              确认删除本场面试、回答和面经？仅来自本场的错题也会删除，其他面试的错题依据会保留。此操作无法撤销。
+            </p>
+            <Button
+              disabled={deleting}
+              onClick={() =>
+                void (async () => {
+                  setDeleting(true);
+                  setDeleteError("");
+                  try {
+                    await adaptiveInterviewService.deleteSession(sessionId);
+                    await queryClient.cancelQueries();
+                    queryClient.clear();
+                    navigate(ROUTES.interviewIntro, { replace: true });
+                  } catch (e) {
+                    setDeleteError(
+                      e instanceof Error ? e.message : "删除未完成，请重试",
+                    );
+                  } finally {
+                    setDeleting(false);
+                  }
+                })()
+              }
+            >
+              {deleting ? "正在删除…" : "确认删除"}
+            </Button>
+            <Button
+              variant="outline"
+              disabled={deleting}
+              onClick={() => setConfirmDelete(false)}
+            >
+              取消
+            </Button>
+          </>
+        )}
+        {deleteError && <p role="alert">{deleteError}</p>}
+      </div>
       {report.isLoading ||
       ["PENDING", "RUNNING", "NOT_REQUESTED"].includes(
         report.data?.status ?? "",

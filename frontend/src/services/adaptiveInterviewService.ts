@@ -67,6 +67,7 @@ export const adaptiveInterviewService = {
       extensionSeconds: 300,
     }),
   report: (id: string) => service.get<ReviewReport>(`${session(id)}/report`),
+  deleteSession: (id: string) => service.delete(session(id)),
   retryReport: (id: string, requestId: string) =>
     service.post(`${session(id)}/report/retry`, { requestId }),
   mistakes: (page = 1, status = "", search = "") =>

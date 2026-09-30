@@ -62,6 +62,20 @@ class AdaptiveInterviewServiceTest {
             return m;
         }
 
+        public List<Session> pendingDeletions() {
+            return sessions.values().stream().filter(s -> s.isDeleted() && !s.isDeletionComplete())
+                    .map(s -> copy(s, Session.class)).toList();
+        }
+
+        public List<Mistake> mistakesForSession(String sessionId, Long userId) {
+            return mistakes.values().stream().filter(m -> m.getUserId().equals(userId)
+                    && m.getSessionIds().contains(sessionId)).map(m -> copy(m, Mistake.class)).toList();
+        }
+
+        public void removeMistake(String id, Long userId) {
+            if (mistakes.get(id) != null && mistakes.get(id).getUserId().equals(userId)) mistakes.remove(id);
+        }
+
         public List<Mistake> mistakes(Long id, int offset, int size, String status, String search) {
             return mistakes.values().stream()
                     .filter(m -> m.getUserId().equals(id) && !m.isDismissed())

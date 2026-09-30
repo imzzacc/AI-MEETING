@@ -58,6 +58,10 @@ public class FlightReplayLocalCache {
         return StrUtil.blankToDefault(stage, "-") + "|" + StrUtil.blankToDefault(requestKey, "-");
     }
 
+    public synchronized void invalidateSession(String sessionId) {
+        cache.keySet().removeIf(key -> key.contains("|" + sessionId + "|"));
+    }
+
     /**
      * 本地缓存条目，保存可回放内容及其失效时间。
      *

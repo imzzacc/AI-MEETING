@@ -13,3 +13,15 @@ for (const [collection, definitions] of Object.entries(indexes)) {
   }
   print(collection + ": " + db.getCollection(collection).getIndexes().map(index => index.name).join(", "));
 }
+// _id already enforces the scope-aware identity hash. The initial compound unique index
+// omitted catalog/role/version scope and incorrectly blocked separate scoped mistakes.
+const mistakes = db.getCollection("interview_adaptive_mistake");
+const obsolete = mistakes.getIndexes().find(index => index.name === "adaptive_mistake_identity");
+if (obsolete) {
+  const expectedKeys = { userId: 1, knowledgePointId: 1, gapKey: 1, type: 1 };
+  if (obsolete.unique !== true || JSON.stringify(obsolete.key) !== JSON.stringify(expectedKeys)) {
+    throw new Error("Unexpected adaptive_mistake_identity definition; inspect before migration");
+  }
+  mistakes.dropIndex(obsolete.name);
+  print("Removed obsolete unscoped unique index; scope-aware _id uniqueness remains enforced");
+}

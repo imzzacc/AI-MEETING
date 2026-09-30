@@ -1,10 +1,11 @@
 {
   "interview_adaptive_session": [
     {"name":"adaptive_owner", "keys":{"userId":1,"deleted":1}},
-    {"name":"adaptive_report_work", "keys":{"finished":1,"deleted":1,"reportStatus":1,"reportNextAttemptAt":1,"reportLeaseUntil":1}}
+    {"name":"adaptive_report_work", "keys":{"finished":1,"deleted":1,"reportStatus":1,"reportNextAttemptAt":1,"reportLeaseUntil":1}},
+    {"name":"adaptive_deletion_work", "keys":{"deleted":1,"deletionComplete":1}}
   ],
   "interview_adaptive_mistake": [
-    {"name":"adaptive_mistake_identity", "keys":{"userId":1,"knowledgePointId":1,"gapKey":1,"type":1},"unique":true},
+    {"name":"adaptive_mistake_topic", "keys":{"userId":1,"knowledgePointId":1,"gapKey":1,"type":1}},
     {"name":"adaptive_mistake_list", "keys":{"userId":1,"dismissed":1,"status":1,"updatedAt":-1}},
     {"name":"adaptive_mistake_source", "keys":{"userId":1,"sessionIds":1}}
   ]

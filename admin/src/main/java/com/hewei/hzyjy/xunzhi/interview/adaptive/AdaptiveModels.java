@@ -160,6 +160,7 @@ public final class AdaptiveModels {
         private String finishReason;
         private boolean archived;
         private boolean deleted;
+        private boolean deletionComplete;
         private String reportStatus = "NOT_REQUESTED";
         private String reportError;
         private String reportMarkdown;
@@ -227,5 +228,11 @@ public final class AdaptiveModels {
             String answer,
             long timestamp,
             Evaluation evaluation,
-            boolean independentlyCorrect) {}
+            boolean independentlyCorrect,
+            String sourceSessionId) {
+        public Practice(String requestId, String answerHash, String answer, long timestamp,
+                Evaluation evaluation, boolean independentlyCorrect) {
+            this(requestId, answerHash, answer, timestamp, evaluation, independentlyCorrect, null);
+        }
+    }
 }

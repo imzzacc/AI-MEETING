@@ -61,6 +61,7 @@ public class InterviewSessionRuntimeSnapshotService {
     private final InterviewSessionService interviewSessionService;
     private final InterviewQuestionService interviewQuestionService;
     private final InterviewQuestionCacheService interviewQuestionCacheService;
+    private final com.hewei.hzyjy.xunzhi.interview.flow.answer.InterviewQuestionLockService sessionLocks;
 
     @Lazy
     @Autowired
@@ -210,10 +211,13 @@ public class InterviewSessionRuntimeSnapshotService {
         if (StrUtil.isBlank(sessionId)) {
             return false;
         }
+        org.redisson.api.RLock deletionGuard = null;
         try {
+            deletionGuard = sessionLocks.acquireAdaptive(sessionId);
+            if (deletionGuard == null) return false;
             InterviewSession session = interviewSessionService.getBySessionId(sessionId);
             if (session == null) {
-                return false;
+                return true; // A removed session has nothing left to refresh or retry.
             }
             InterviewQuestion question = interviewQuestionService.getBySessionId(sessionId);
             for (int attempt = 0; attempt < HOT_SNAPSHOT_CAS_MAX_RETRIES; attempt++) {
@@ -286,6 +290,8 @@ public class InterviewSessionRuntimeSnapshotService {
         } catch (Exception ex) {
             log.warn("Failed to refresh runtime snapshot, sessionId={}", sessionId, ex);
             return false;
+        } finally {
+            sessionLocks.release(deletionGuard);
         }
     }
 

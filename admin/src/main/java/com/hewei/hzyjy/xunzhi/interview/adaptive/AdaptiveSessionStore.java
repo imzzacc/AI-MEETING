@@ -16,4 +16,10 @@ public interface AdaptiveSessionStore {
     Mistake saveMistake(Mistake mistake);
 
     List<Mistake> mistakes(Long userId, int offset, int size, String status, String search);
+
+    List<Session> pendingDeletions();
+
+    List<Mistake> mistakesForSession(String sessionId, Long userId);
+
+    void removeMistake(String id, Long userId);
 }

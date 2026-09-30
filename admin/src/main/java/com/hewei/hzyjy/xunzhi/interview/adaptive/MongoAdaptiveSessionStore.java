@@ -50,6 +50,20 @@ public class MongoAdaptiveSessionStore implements AdaptiveSessionStore {
         return mongo.save(m);
     }
 
+    public List<Session> pendingDeletions() {
+        return mongo.find(Query.query(Criteria.where("deleted").is(true)
+                .and("deletionComplete").ne(true)).limit(20), Session.class);
+    }
+
+    public List<Mistake> mistakesForSession(String sessionId, Long userId) {
+        return mongo.find(Query.query(Criteria.where("userId").is(userId)
+                .and("sessionIds").is(sessionId)), Mistake.class);
+    }
+
+    public void removeMistake(String id, Long userId) {
+        mongo.remove(Query.query(Criteria.where("_id").is(id).and("userId").is(userId)), Mistake.class);
+    }
+
     public List<Mistake> mistakes(Long userId, int offset, int size, String status, String search) {
         Criteria criteria = Criteria.where("userId").is(userId).and("dismissed").is(false);
         if (status != null && !status.isBlank()) criteria.and("status").is(status);
