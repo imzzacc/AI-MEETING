@@ -21,6 +21,14 @@ spec 中的计划、策略、证据、决策和报告任务是逻辑模型。本
 
 报告采用确定性编排已有评分反馈、完整回答和检索资料，不额外调用模型自由总结，降低编造面经与重复费用。错题集保留用户纠正和移除标记，报告重试不覆盖或复活它们。当前错题最多保存 100 次练习；会话主问题最多 100 道、追问最多 20 次，限定聚合大小。
 
+### 有资料题目的反馈边界
+
+2026-09-30新增程序防护：`InterviewEvidenceValidator`完成引用与来源校验后，`GroundedFeedback`仅由校验后的状态、回答摘录和冻结资料生成反馈与解释，不直接展示模型返回的自由文本feedback/rationale。引用降为UNCERTAIN时，原来的肯定或否定解释也一并移除；无有效观察时不保留模型的“已掌握”结论。反馈最多5901字符，完整回答引用和来源仍保存在turn中。无匹配知识主题的普通评分继续沿用原有AI反馈，此防护不等于所有开放题都完成来源核验。
+
+模型给出的分数与语义状态仍是AI辅助判断，不因为模板反馈就变成事实。仅凭PARTIAL不能证明缺少题目必需的内容，因此未解决的REQUIRED_GAP卡片初始标为NEEDS_CONFIRMATION；实际追问补全后可进入REVIEWING，独立复习验证与用户纠正仍沿用原流程。规则控时、主问题计划、模型输入/输出协议未变。
+
+该逻辑作用于新评价，以及随后据此生成的答题响应、面经和复习证据。已提交的旧turn/报告保持原历史版本，没有静默批量改写旧面经；回退到旧后端会恢复展示未核验模型解释，不建议以回退代码作为上线方案。原始供应商响应继续按既有SingleFlight缓存策略保存，不将短期缓存称为永久审计存储。
+
 ## 知识库范围与导入
 
 目录：`admin/src/main/resources/knowledge/interview-catalog-v1.json`。首批覆盖 Java 17 equals/hashCode、volatile、MySQL 8 InnoDB 隔离，以及 Redis 缓存故障分类；来源含官方 URL、版本、编辑摘要及稳定 ID。
@@ -82,4 +90,4 @@ mongosh '实际Mongo连接URI/目标数据库' --file scripts/adaptive-indexes.j
 
 前端：`npm ci`、`npm run check`、`npm run build`。CI 同时运行前后端检查。本轮额外修正基线中缺失的测试构造参数、Mockito argLine、异步限流 mock、归档调用序列和语音测试的音频时间范围；未通过删用例来放行。
 
-详细数量和限制见 [验收记录](adaptive-interview-validation.md)。已执行45分钟策略真实HTTP面试、30分钟完整浏览器面试（3次RAG追问）、20分钟实际超时后的浏览器面试（10道主问题、0追问）、面经导出、复习、直接UI删除及Mongo/MySQL/Redis清理；保留失败及修复记录。刷新时题目恢复完成前禁止输入。会话锁默认等待2秒应对正常页面并发读取，可通过 `xunzhi-agent.interview.answer-guard.adaptive-lock-wait-millis` 覆盖；持续占用仍明确失败，原模式锁策略不变。正式人工模型/检索评估、最后提示词发布及部分故障场景仍需补齐，自动化不等于完整spec验收完成。
+详细数量和限制见 [验收记录](adaptive-interview-validation.md)。已执行45分钟策略真实HTTP面试、30分钟完整浏览器面试（3次RAG追问）、20分钟实际超时后的浏览器面试（10道主问题、0追问）、面经导出、复习、直接UI删除及Mongo/MySQL/Redis清理；保留失败及修复记录。反馈防护最终代码另完成10道主问题+2次追问的真实浏览器面试和持久化核验。刷新时题目恢复完成前禁止输入。会话锁默认等待2秒应对正常页面并发读取，可通过 `xunzhi-agent.interview.answer-guard.adaptive-lock-wait-millis` 覆盖；持续占用仍明确失败，原模式锁策略不变。最终提示词发布已完成；正式人工模型/检索评估及部分故障场景仍需补齐，自动化不等于完整spec验收完成。

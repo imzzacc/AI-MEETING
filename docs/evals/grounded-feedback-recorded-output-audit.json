@@ -1,0 +1,546 @@
+{
+  "paidCalls" : 0,
+  "recordedOutputs" : 90,
+  "note" : "Overlapping development cases. Proves unverified model prose does not reach grounded feedback; does not prove semantic state accuracy or human acceptance.",
+  "results" : [ {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v1-correct",
+    "states" : [ "atomicity:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v1-incorrect",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v1-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v2-correct",
+    "states" : [ "atomicity:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v2-incorrect",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v2-unknown",
+    "states" : [ "atomicity:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v3-correct",
+    "states" : [ "atomicity:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v3-incorrect",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v3-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v4-correct",
+    "states" : [ "atomicity:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v4-incorrect",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v4-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v5-correct",
+    "states" : [ "atomicity:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v5-incorrect",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "v5-unknown",
+    "states" : [ "atomicity:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h1-correct",
+    "states" : [ "contract:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h1-incorrect",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h1-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h2-correct",
+    "states" : [ "contract:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h2-incorrect",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h2-unknown",
+    "states" : [ "contract:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h3-correct",
+    "states" : [ "contract:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h3-incorrect",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h3-unknown",
+    "states" : [ "contract:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h4-correct",
+    "states" : [ "contract:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h4-incorrect",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h4-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h5-correct",
+    "states" : [ "contract:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h5-incorrect",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "h5-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m1-correct",
+    "states" : [ "levels:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m1-incorrect",
+    "states" : [ "levels:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m1-unknown",
+    "states" : [ "levels:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m2-correct",
+    "states" : [ "levels:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m2-incorrect",
+    "states" : [ "levels:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m2-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m3-correct",
+    "states" : [ "levels:UNCERTAIN" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m3-incorrect",
+    "states" : [ "levels:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m3-unknown",
+    "states" : [ "levels:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m4-correct",
+    "states" : [ "levels:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m4-incorrect",
+    "states" : [ "levels:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m4-unknown",
+    "states" : [ "levels:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m5-correct",
+    "states" : [ "levels:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m5-incorrect",
+    "states" : [ "levels:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "m5-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c1-correct",
+    "states" : [ "failure-distinction:COVERED", "mitigation:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c1-incorrect",
+    "states" : [ "failure-distinction:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c1-unknown",
+    "states" : [ "failure-distinction:NOT_OBSERVED", "mitigation:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c2-correct",
+    "states" : [ "failure-distinction:COVERED", "mitigation:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c2-incorrect",
+    "states" : [ "failure-distinction:INCORRECT", "mitigation:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c2-unknown",
+    "states" : [ "failure-distinction:NOT_OBSERVED", "mitigation:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c3-correct",
+    "states" : [ "failure-distinction:COVERED", "mitigation:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c3-incorrect",
+    "states" : [ "failure-distinction:UNCERTAIN", "mitigation:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c3-unknown",
+    "states" : [ "failure-distinction:NOT_OBSERVED", "mitigation:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c4-correct",
+    "states" : [ "failure-distinction:COVERED", "mitigation:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c4-incorrect",
+    "states" : [ "failure-distinction:NOT_OBSERVED", "mitigation:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c4-unknown",
+    "states" : [ "failure-distinction:NOT_OBSERVED", "mitigation:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c5-correct",
+    "states" : [ "failure-distinction:COVERED", "mitigation:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c5-incorrect",
+    "states" : [ "failure-distinction:INCORRECT", "mitigation:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/grounded-review-draft-60.json",
+    "id" : "c5-unknown",
+    "states" : [ ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "v1-unknown",
+    "states" : [ "atomicity:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "v5-incorrect",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "h3-incorrect",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "m2-unknown",
+    "states" : [ "levels:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "m3-correct",
+    "states" : [ "levels:PARTIAL" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "c3-incorrect",
+    "states" : [ "failure-distinction:NOT_OBSERVED", "mitigation:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "c4-incorrect",
+    "states" : [ "failure-distinction:NOT_OBSERVED", "mitigation:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "volatile-false-experience",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "volatile-correct",
+    "states" : [ "atomicity:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "volatile-unknown",
+    "states" : [ "atomicity:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "hash-collision-false",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "hash-collision-correct",
+    "states" : [ "contract:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-13.json",
+    "id" : "mysql-false-with-injection",
+    "states" : [ "levels:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "v1-unknown",
+    "states" : [ "atomicity:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "v5-incorrect",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "h3-incorrect",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "m2-unknown",
+    "states" : [ "levels:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "m3-correct",
+    "states" : [ "levels:PARTIAL" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "c3-incorrect",
+    "states" : [ "failure-distinction:UNCERTAIN", "mitigation:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "c4-incorrect",
+    "states" : [ "failure-distinction:NOT_OBSERVED", "mitigation:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "volatile-false-experience",
+    "states" : [ "atomicity:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "volatile-correct",
+    "states" : [ "atomicity:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "volatile-unknown",
+    "states" : [ "atomicity:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "hash-collision-false",
+    "states" : [ "contract:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "hash-collision-correct",
+    "states" : [ "contract:COVERED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "mysql-false-with-injection",
+    "states" : [ "levels:INCORRECT" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "partial-volatile-visibility-only",
+    "states" : [ "atomicity:NOT_OBSERVED" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "partial-equals-properties-missing",
+    "states" : [ "contract:PARTIAL" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-regression-16.json",
+    "id" : "partial-cache-one-of-three",
+    "states" : [ "failure-distinction:PARTIAL", "mitigation:PARTIAL" ]
+  }, {
+    "prosePerturbationInvariant" : true,
+    "revalidationStable" : true,
+    "dataset" : "docs/evals/prompt-publication-20260930/grounded-prompt-restored-smoke.json",
+    "id" : "volatile-false-experience",
+    "states" : [ "atomicity:INCORRECT" ]
+  } ]
+}

@@ -4,7 +4,11 @@
 
 ## 最新验证
 
-- 后端最终代码：Java 17.0.19、Maven 3.9.16，`mvn -B -ntp spotless:apply clean verify`，2026-09-30 17:29:50 成功。154 项单元/服务测试 + 6 项真实 Mongo IT，0 失败/错误/跳过。日志 adaptive-pace-final-verify-2.log。新增六组 20/30/45 分钟快慢时钟模拟及发布前预算变化回归；首次新增用例的 Mockito 重设桩写法导致异常，修正后重跑全部范围，保留 adaptive-pace-final-verify.log 失败记录。
+- 20:14最终反馈防护代码01ffc2b：完整`mvn -B -ntp spotless:apply clean verify`成功，160项单元/服务+6项真实Mongo IT，0失败/错误/跳过。新增5项反馈防护与1项PARTIAL卡片待确认回归。日志grounded-feedback-final-verify.log。先前05095e4的159+6也通过，但以最终160+6为准。
+- 有RAG主题的反馈与rationale改由程序从校验后的状态、回答摘录及冻结资料生成。历史90份输出（60+13+16+1，含重复调试样本）用实际编译Java重放；任意替换模型feedback/rationale后，生成的评价完全一致，二次校验稳定。零模型调用；只证明不透传模型自由解释，不证明评分状态正确，原43/60、12/13、13/16结果不改。
+- 最终代码真实浏览器面试：10道主问题+2次RAG追问，主问题逐轮不变，刷新恢复、自动结束、面经展示/导出无pageerror。持久化核验6轮有资料反馈与响应一致，4个本场错题均采用受控解释，1条未解决REQUIRED_GAP为NEEDS_CONFIRMATION。此前05095e4另完成一场10+2，保留独立记录。合计新增26份应用供应商响应、33,365 token。详见[反馈防护记录](evals/grounded-feedback-guard-20260930.md)。
+
+- 前一版后端：Java 17.0.19、Maven 3.9.16，`mvn -B -ntp spotless:apply clean verify`，2026-09-30 17:29:50 成功。154 项单元/服务测试 + 6 项真实 Mongo IT，0 失败/错误/跳过。日志 adaptive-pace-final-verify-2.log。新增六组 20/30/45 分钟快慢时钟模拟及发布前预算变化回归；首次新增用例的 Mockito 重设桩写法导致异常，修正后重跑全部范围，保留 adaptive-pace-final-verify.log 失败记录。
 - 功能提交 ab5b750 的 GitHub push / PR verify 和 frontend 均成功：[CI](https://github.com/imzzacc/AI-MEETING/actions/runs/36696646458)。CI 不包含付费模型质量或真实浏览器完整面试，后者独立记录于下文及[脱敏验收摘要](evals/verification-receipt-20260930.json)。
 - 前端含刷新恢复输入门禁：lint、TypeScript 通过，完整 22 文件、100 项通过，build 成功。此轮 forks / maxWorkers=2 有两个 worker 启动超时（84 项通过，整体失败）；以完整范围 `npm run test:run -- --pool=threads --maxWorkers=1` 重跑全过，未过滤或跳过用例。日志 frontend-recovery-final.log 保留失败，frontend-recovery-threads-full.log、frontend-recovery-build.log 记录成功。
 - 真实数据库：个人独立 MongoDB 127.0.0.1:28029；VM 专用 MySQL/Redis，经本机 13306/16379 隧道访问。未使用公司数据库、队列或 Jenkins，未启动用户原部署。
@@ -62,7 +66,11 @@ Spark Pro-128k 曾把“volatile 保证 i++ 原子性”判 100/COVERED，并把
 
 本轮累计授权人民币5元，无充值或购买。此前已知121,341 token，加本次30次API共39,173 token及3次网页调试3,750 token，最新已知累计 **164,264 token**。此前应用的39份响应按cacheKey合并保存，避免TTL或删除后漏算。Qwen页面价格：输入原价1 / 折扣0.6元每百万token，输出原价4 / 折扣2.4元每百万token。本次续作42,923 token即使全部按较高的输出原价计算约0.172元，这是价表估算，实际平台账单未核对。所有调用有次数上限，无自动模型重试。
 
+20:19更新：两场反馈防护真实面试新增33,365 token，累计 **197,629 token**；应用用量账本从39份/45,567增至65份/78,932，其他网页与直接API累计量不变。没有新批量调参或充值。实际账单仍未核对，不将token用量当作已付金额。
+
 提示词发布及有限复验已完成，但语义失败仍未解决。合并前仍需修复或保守处理这些质量问题、完成独立题目及人工标注质量评估、人工审核资料和映射。三档快慢组合已有注入时钟的服务级回归，真实体验已完成45分钟策略HTTP、30分钟策略完整浏览器快答、20分钟真实超时浏览器慢答；完整故障矩阵、所有旧记录形态、实际语音尚未全部验收。已完成的重启、过期租约和双进程竞争恢复不等于所有故障注入通过，mock、skip、构建或单条供应商调用不能替代完整spec。
+
+20:19保守处理已落地：模型自由技术解释不再透传到新RAG评价，PARTIAL不直接进入已确认缺口；主问题与规则裁决不变。剩余质量限制是语义状态、参考分数和来源本身仍未经独立人工验收，不能因展示内容受控就宣称模型准确率达标。默认开关仍关闭、PR仍Draft、main未合并。
 
 ## 证据与历史失败
 
