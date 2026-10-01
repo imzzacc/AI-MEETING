@@ -4,7 +4,7 @@
   "assistantReviewedAt": "2026-10-01",
   "dataset": "grounded-review-draft-60.json",
   "formalAcceptanceEligible": false,
-  "note": "Corrected assistant adjudication v2. The first heuristic pass contained six transparent rule errors; those rows are corrected here. This remains assistant review, not human review, and the old dataset is a development/debug set.",
+  "note": "Assistant adjudication of a development/debug set. Only m3-correct received explicit user confirmation; this does not make the full dataset an independent formal acceptance set.",
   "counts": {
     "cases": 60,
     "agreements": 60,
@@ -507,7 +507,13 @@
       "assistantReason": "?????????????????????? gap/next-key locking??????????????????????????????????",
       "originalAssistantSuggestion": [
         "COVERED"
-      ]
+      ],
+      "humanConfirmation": {
+        "state": "COVERED",
+        "confirmedBy": "user",
+        "confirmedAt": "2026-10-01",
+        "note": "???????????????????????gap/next-key locking???????????????????"
+      }
     },
     {
       "id": "m3-incorrect",
