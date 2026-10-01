@@ -14,10 +14,9 @@ import {
 import { useAudioTranscriptionTransport } from "@/hooks/audio/useAudioTranscriptionTransport";
 import { useMicrophonePcmStream } from "@/hooks/audio/useMicrophonePcmStream";
 import type { UserRespDTO } from "@/types/auth";
+import { audioTranscriptionError } from "@/lib/audioTranscriptionError";
 
 const AUDIO_SAMPLE_RATE = 16000;
-const START_RECORDING_ERROR =
-  "Unable to access microphone or connect to transcription";
 
 const resolveAudioUserId = (currentUser: UserRespDTO | null) => {
   const normalizedUsername = currentUser?.username?.trim();
@@ -33,6 +32,7 @@ export function useAudioTranscriptionController(
   currentUser: UserRespDTO | null,
 ) {
   const [isRecording, setIsRecording] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [transcriptionState, dispatchTranscription] = useReducer(
     reduceAudioTranscriptionState,
@@ -62,7 +62,7 @@ export function useAudioTranscriptionController(
       });
     }, []),
     onError: useCallback((message: string) => {
-      setError(message);
+      setError(audioTranscriptionError(message));
       void cleanupRef.current();
     }, []),
   });
@@ -72,7 +72,7 @@ export function useAudioTranscriptionController(
     onChunk: sendAudioChunk,
     onError: useCallback((streamError: unknown) => {
       console.error("Microphone PCM stream failed:", streamError);
-      setError(START_RECORDING_ERROR);
+      setError(audioTranscriptionError(streamError));
       void cleanupRef.current();
     }, []),
   });
@@ -87,6 +87,7 @@ export function useAudioTranscriptionController(
 
     cleanupPromiseRef.current = (async () => {
       activeStartTokenRef.current = null;
+      setIsStarting(false);
       disconnectTransport();
       await stopStream();
       setIsRecording(false);
@@ -105,30 +106,34 @@ export function useAudioTranscriptionController(
 
   const startRecording = useCallback(async () => {
     if (!currentUser) {
-      setError("User is not logged in");
+      setError("请先登录，再使用语音回答。");
       return;
     }
 
-    if (isRecording) {
+    if (isRecording || activeStartTokenRef.current) {
       return;
     }
 
+    const startToken = Symbol("audio-transcription-start");
     try {
-      const startToken = Symbol("audio-transcription-start");
       activeStartTokenRef.current = startToken;
+      setIsStarting(true);
       setError(null);
       dispatchTranscription({
         kind: "reset",
       });
-      connectTransport();
+      await connectTransport();
+      if (activeStartTokenRef.current !== startToken) return;
       await startStream();
       if (activeStartTokenRef.current !== startToken) {
         return;
       }
       setIsRecording(true);
+      setIsStarting(false);
     } catch (startError) {
+      if (activeStartTokenRef.current !== startToken) return;
       console.error("Start recording failed:", startError);
-      setError(START_RECORDING_ERROR);
+      setError(audioTranscriptionError(startError));
       await cleanup();
     }
   }, [cleanup, connectTransport, currentUser, isRecording, startStream]);
@@ -146,6 +151,7 @@ export function useAudioTranscriptionController(
   return useMemo(
     () => ({
       isRecording,
+      isStarting,
       currentSentence: transcriptionState.liveText,
       historySentences: transcriptionState.finalText
         ? transcriptionState.finalText
@@ -158,6 +164,13 @@ export function useAudioTranscriptionController(
       startRecording,
       stopRecording,
     }),
-    [error, isRecording, startRecording, stopRecording, transcriptionState],
+    [
+      error,
+      isRecording,
+      isStarting,
+      startRecording,
+      stopRecording,
+      transcriptionState,
+    ],
   );
 }
