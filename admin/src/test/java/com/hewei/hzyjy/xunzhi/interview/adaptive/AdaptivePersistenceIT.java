@@ -96,6 +96,13 @@ class AdaptivePersistenceIT {
             assertNotNull(raw);
             var scopes = raw.get("catalog", org.bson.Document.class).get("scopes", org.bson.Document.class);
             assertTrue(scopes.containsKey("java.volatile"));
+            // An old frozen session must also load without the new optional field.
+            mongo.getCollection("interview_adaptive_session").updateOne(
+                    new org.bson.Document("_id", s.getId()),
+                    new org.bson.Document("$unset", new org.bson.Document("catalog.topics.$[].aliasGroups", "")));
+            var legacy = new MongoAdaptiveSessionStore(new MongoTemplate(client, mongo.getDb().getName())).find(s.getId());
+            assertTrue(legacy.getCatalog().topics().stream().allMatch(t -> t.aliasGroups().isEmpty()));
+            assertEquals(s.getQuestions(), legacy.getQuestions());
         }
     }
 

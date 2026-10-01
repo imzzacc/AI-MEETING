@@ -45,7 +45,18 @@ public final class AdaptiveModels {
             List<String> aliases,
             List<String> rubricPoints,
             List<Source> sources,
-            List<Candidate> candidates) {}
+            List<Candidate> candidates,
+            List<List<String>> aliasGroups) {
+        public Topic {
+            // Older frozen catalogs have no compound aliases.
+            aliasGroups = aliasGroups == null ? List.of() : aliasGroups.stream().map(List::copyOf).toList();
+        }
+
+        public Topic(String id, List<String> aliases, List<String> rubricPoints,
+                List<Source> sources, List<Candidate> candidates) {
+            this(id, aliases, rubricPoints, sources, candidates, List.of());
+        }
+    }
 
     public record KnowledgeScope(Set<String> roles, String technology, Set<String> versions) {}
 

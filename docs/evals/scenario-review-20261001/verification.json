@@ -1,0 +1,29 @@
+{
+  "humanReviewed": false,
+  "modelCallsForVerification": 0,
+  "evaluationDatasetCommit": "3286823",
+  "strictChecksReproduced": "52/60",
+  "backendCommand": "mvn -B -ntp spotless:apply clean verify",
+  "backendTests": {
+    "surefire": {
+      "tests": 163,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "failsafe": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "backendLog": "scenario-retrieval-v4-verify.log",
+  "catalogVersion": "java-starter-v4",
+  "catalogSha256": "fdc4b832d161502247652cea79d526f71486786880ce8e984027d86c205078e3",
+  "knownCumulativeTokens": 274209,
+  "authorizedCumulativeBudgetCny": 5,
+  "actualBilledCny": null,
+  "mainMerged": false,
+  "runtimeStillAt": "01ffc2b"
+}

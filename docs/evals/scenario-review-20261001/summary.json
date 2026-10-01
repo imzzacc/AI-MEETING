@@ -1,0 +1,165 @@
+{
+  "humanReviewed": false,
+  "labelAuthority": "assistant",
+  "caseCount": 60,
+  "completedCases": 60,
+  "strictPassedCases": 52,
+  "targetRubrics": 75,
+  "matchingTargetRubrics": 67,
+  "missingTargetRubrics": 0,
+  "duplicateTargetRubrics": 1,
+  "uncertainTargetRubrics": 0,
+  "errorClassification": {
+    "truePositive": 24,
+    "falsePositive": 1,
+    "falseNegative": 0,
+    "precision": 0.96,
+    "recall": 1.0
+  },
+  "confusion": {
+    "COVERED -> COVERED": 25,
+    "COVERED -> PARTIAL": 3,
+    "INCORRECT -> INCORRECT": 24,
+    "NOT_OBSERVED -> NOT_OBSERVED": 12,
+    "NOT_OBSERVED -> PARTIAL": 2,
+    "PARTIAL -> DUPLICATE": 1,
+    "PARTIAL -> PARTIAL": 6,
+    "UNCERTAIN -> COVERED": 1,
+    "UNCERTAIN -> INCORRECT": 1
+  },
+  "failures": [
+    {
+      "id": "s02-3",
+      "expected": {
+        "atomicity": [
+          "NOT_OBSERVED"
+        ]
+      },
+      "actual": {
+        "atomicity": "PARTIAL"
+      },
+      "failedChecks": [
+        "state_atomicity"
+      ],
+      "providerReturned": true
+    },
+    {
+      "id": "s04-1",
+      "expected": {
+        "atomicity": [
+          "COVERED"
+        ]
+      },
+      "actual": {
+        "atomicity": "PARTIAL"
+      },
+      "failedChecks": [
+        "state_atomicity"
+      ],
+      "providerReturned": true
+    },
+    {
+      "id": "s08-3",
+      "expected": {
+        "contract": [
+          "NOT_OBSERVED"
+        ]
+      },
+      "actual": {
+        "contract": "PARTIAL"
+      },
+      "failedChecks": [
+        "state_contract"
+      ],
+      "providerReturned": true
+    },
+    {
+      "id": "s10-1",
+      "expected": {
+        "contract": [
+          "COVERED"
+        ]
+      },
+      "actual": {
+        "contract": "PARTIAL"
+      },
+      "failedChecks": [
+        "state_contract"
+      ],
+      "providerReturned": true
+    },
+    {
+      "id": "s13-3",
+      "expected": {
+        "levels": [
+          "PARTIAL"
+        ]
+      },
+      "actual": {
+        "levels": "DUPLICATE"
+      },
+      "failedChecks": [
+        "grounded_levels",
+        "state_levels"
+      ],
+      "providerReturned": true
+    },
+    {
+      "id": "s15-1",
+      "expected": {
+        "levels": [
+          "UNCERTAIN"
+        ]
+      },
+      "actual": {
+        "levels": "COVERED"
+      },
+      "failedChecks": [
+        "state_levels"
+      ],
+      "providerReturned": true
+    },
+    {
+      "id": "s15-2",
+      "expected": {
+        "levels": [
+          "UNCERTAIN"
+        ]
+      },
+      "actual": {
+        "levels": "INCORRECT"
+      },
+      "failedChecks": [
+        "state_levels"
+      ],
+      "providerReturned": true
+    },
+    {
+      "id": "s19-1",
+      "expected": {
+        "failure-distinction": [
+          "COVERED"
+        ],
+        "mitigation": [
+          "COVERED"
+        ]
+      },
+      "actual": {
+        "failure-distinction": "PARTIAL",
+        "mitigation": "COVERED"
+      },
+      "failedChecks": [
+        "state_failure-distinction"
+      ],
+      "providerReturned": true
+    }
+  ],
+  "semanticCitationSupportRate": null,
+  "limitations": [
+    "Metrics are relative to the declared labels and do not independently establish their correctness.",
+    "Error metrics are target-rubric classification metrics, not end-to-end mistake-card precision.",
+    "Structural quote/source validation cannot determine semantic citation support."
+  ],
+  "totalTokens": 76580,
+  "datasetSha256": "bb5e242a01ab76cd6340924d5178e48ceffa71932e4d0b7aef8a2cdbf966ece9"
+}

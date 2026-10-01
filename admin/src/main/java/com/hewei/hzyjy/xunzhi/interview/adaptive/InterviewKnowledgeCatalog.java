@@ -52,6 +52,11 @@ public class InterviewKnowledgeCatalog {
                 throw new IllegalArgumentException("Invalid topic: " + t.id());
             if (t.candidates().size() > 5 || t.sources().size() > 6 || t.rubricPoints().size() > 10)
                 throw new IllegalArgumentException("Catalog topic exceeds bounds");
+            if (t.aliasGroups().size() > 20
+                    || t.aliasGroups().stream().anyMatch(group -> group.size() < 2
+                            || group.size() > 8 || group.stream().anyMatch(term -> term.isBlank()
+                                    || term.length() > 100)))
+                throw new IllegalArgumentException("Invalid compound aliases: " + t.id());
             for (Source s : t.sources()) {
                 if (!ids.add("s:" + s.id())
                         || s.text().isBlank()
@@ -79,7 +84,9 @@ public class InterviewKnowledgeCatalog {
                 .filter(
                         t ->
                                 t.aliases().stream()
-                                        .anyMatch(a -> text.contains(a.toLowerCase(Locale.ROOT))))
+                                        .anyMatch(a -> text.contains(a.toLowerCase(Locale.ROOT)))
+                                || t.aliasGroups().stream().anyMatch(group -> group.stream()
+                                        .allMatch(a -> text.contains(a.toLowerCase(Locale.ROOT)))))
                 .limit(5)
                 .map(Topic::id)
                 .toList();

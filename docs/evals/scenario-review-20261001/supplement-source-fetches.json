@@ -1,0 +1,30 @@
+[
+  {
+    "id": "mysql8-official-mirror",
+    "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-transaction-isolation-levels.html",
+    "status": 200,
+    "finalUrl": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-transaction-isolation-levels.html",
+    "sha256": "ff82b8c7bbc5316f73b45b58250b8dad7c7720f47ab76ea68a444b1cf00296fc"
+  },
+  {
+    "id": "hybrid-cache-stampede",
+    "url": "https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid?view=aspnetcore-9.0",
+    "status": 200,
+    "finalUrl": "https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid?view=aspnetcore-9.0",
+    "sha256": "90a5ecb9dee11b7a6ecfe9a73f2de420f7017642e52fe827c8d09343bf05891f"
+  },
+  {
+    "id": "redis-bloom",
+    "url": "https://redis.io/docs/latest/develop/data-types/probabilistic/bloom-filter/",
+    "status": 200,
+    "finalUrl": "https://redis.io/docs/latest/develop/data-types/probabilistic/bloom-filter/",
+    "sha256": "6dec9b59fd948218d23cf7842d544d78142f20d372669769e53658642d582690"
+  },
+  {
+    "id": "java-atomic-package",
+    "url": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/package-summary.html",
+    "status": 200,
+    "finalUrl": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/package-summary.html",
+    "sha256": "eef93fd94fc8e543f46d35c089d633adf08e74fd4944dae194cfec16cc72e0c8"
+  }
+]
