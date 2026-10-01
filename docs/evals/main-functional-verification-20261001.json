@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "mainMergeCommit": "4aa5f97a0873e76cf61bcb7387a71812f7701308",
+  "artifactSha256": "d10c68be0c3b2df02c991837814e03fb44656438fc047d6deaefd3e0677e35a0",
+  "catalogVersion": "java-starter-v4",
+  "durationPolicyMinutes": 30,
+  "mainQuestionsAnswered": 10,
+  "ragFollowupsAnswered": 3,
+  "groundedTurns": 7,
+  "mistakeCards": 5,
+  "mistakeCardStatuses": {
+    "REVIEWING": 3,
+    "TO_REVIEW": 1,
+    "NEEDS_CONFIRMATION": 1
+  },
+  "checks": [
+    "real_ui_login_create_policy_upload_original_workflow",
+    "reload_preserves_start",
+    "all_main_questions_unchanged_and_answered",
+    "automatic_finish",
+    "report_render_and_download",
+    "v4_catalog_and_groups_persisted",
+    "answer_feedback_matches_persistence",
+    "mistake_cards_created",
+    "unresolved_gaps_pending_confirmation"
+  ],
+  "pageErrors": [],
+  "browserFinishedAt": "2026-10-01T07:29:31.895Z",
+  "incrementalModelTokens": 17420,
+  "knownCumulativeModelTokens": 291629,
+  "actualBilledCny": null,
+  "authorizedCumulativeBudgetCny": 5,
+  "limit": "Functional browser E2E with synthetic answers; no claim of semantic accuracy or voice/camera verification.",
+  "initialFailure": "Vite stale module-resolution cache after branch switch; failed before login/model calls. Restarted own frontend and reran with a new evidence file."
+}

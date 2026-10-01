@@ -1,6 +1,8 @@
 # 自适应面试验收记录
 
-更新：2026-10-01。个人仓库 imzzacc/AI-MEETING，功能分支 feature/adaptive-interview-rag，主线 main@be2e9d7，Draft PR #1。用户已授权完整验证通过后合并；目前尚未满足条件，功能默认关闭，main 未合并。
+更新：2026-10-01。个人仓库 imzzacc/AI-MEETING，PR #1 已合入 `main@4aa5f97`。用户在了解当前限制后明确要求“没事儿，你合并吧，先把功能跑通”，本次按该更新要求先合并功能。默认配置仍关闭，个人本地验证环境启用 ADAPTIVE；已知模型误判、资料覆盖和未执行的语音检查没有因此变为通过。
+
+合并提交与已验证功能提交1f2cf56的文件树完全一致；主线GitHub后端与前端CI均通过：[主线CI](https://github.com/imzzacc/AI-MEETING/actions/runs/36829900883)。下文“尚未合并/尚阻止合并”等文字是当时的历史记录，以本段最新用户决定为准。合并后的实际浏览器结果见[功能运行记录](evals/main-functional-run-20261001.md)。
 
 ## 2026-10-01 续作（优先于下文历史记录）
 
