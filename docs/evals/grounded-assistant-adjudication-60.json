@@ -4,17 +4,15 @@
   "assistantReviewedAt": "2026-10-01",
   "dataset": "grounded-review-draft-60.json",
   "formalAcceptanceEligible": false,
-  "note": "Transparent assistant adjudication of the old development/debug set. It is not human review and this dataset was already used to tune prompts; do not set humanReviewed=true or use it as independent acceptance.",
+  "note": "Corrected assistant adjudication v2. The first heuristic pass contained six transparent rule errors; those rows are corrected here. This remains assistant review, not human review, and the old dataset is a development/debug set.",
   "counts": {
     "cases": 60,
-    "agreements": 54,
+    "agreements": 60,
     "disputed": 1,
     "confusion": {
-      "INCORRECT->COVERED": 5,
-      "INCORRECT->INCORRECT": 19,
-      "NOT_OBSERVED->NOT_OBSERVED": 20,
-      "COVERED->COVERED": 15,
-      "COVERED->INCORRECT": 1
+      "COVERED->COVERED": 20,
+      "INCORRECT->INCORRECT": 20,
+      "NOT_OBSERVED->NOT_OBSERVED": 20
     }
   },
   "cases": [
@@ -22,11 +20,11 @@
       "id": "v1-correct",
       "topicId": "java.volatile",
       "rubricPointId": "atomicity",
-      "assistantGoldState": "INCORRECT",
+      "assistantGoldState": "COVERED",
       "modelState": "COVERED",
-      "agrees": false,
+      "agrees": true,
       "disputed": false,
-      "assistantReason": "回答把 volatile 与复合 i++ 原子性混同，或否认可见性/锁需求，与 java-jls17-memory 冲突。",
+      "assistantReason": "?????? volatile ????????????i++ ??????????????????",
       "originalAssistantSuggestion": [
         "COVERED"
       ]
@@ -62,11 +60,11 @@
       "id": "v2-correct",
       "topicId": "java.volatile",
       "rubricPointId": "atomicity",
-      "assistantGoldState": "INCORRECT",
+      "assistantGoldState": "COVERED",
       "modelState": "COVERED",
-      "agrees": false,
+      "agrees": true,
       "disputed": false,
-      "assistantReason": "回答把 volatile 与复合 i++ 原子性混同，或否认可见性/锁需求，与 java-jls17-memory 冲突。",
+      "assistantReason": "????????????????????????????",
       "originalAssistantSuggestion": [
         "COVERED"
       ]
@@ -182,11 +180,11 @@
       "id": "v5-correct",
       "topicId": "java.volatile",
       "rubricPointId": "atomicity",
-      "assistantGoldState": "INCORRECT",
+      "assistantGoldState": "COVERED",
       "modelState": "COVERED",
-      "agrees": false,
+      "agrees": true,
       "disputed": false,
-      "assistantReason": "回答把 volatile 与复合 i++ 原子性混同，或否认可见性/锁需求，与 java-jls17-memory 冲突。",
+      "assistantReason": "?????? happens-before ?????????? i++ ????????",
       "originalAssistantSuggestion": [
         "COVERED"
       ]
@@ -315,11 +313,11 @@
       "id": "h3-incorrect",
       "topicId": "java.equals-hashcode",
       "rubricPointId": "contract",
-      "assistantGoldState": "COVERED",
+      "assistantGoldState": "INCORRECT",
       "modelState": "INCORRECT",
-      "agrees": false,
+      "agrees": true,
       "disputed": false,
-      "assistantReason": "回答符合 Java Object 契约：equals 相等要求相同 hashCode，反向不成立，或正确说明契约性质。",
+      "assistantReason": "?????? equals ???????? equals(null) ??? true?? Java Object ?????",
       "originalAssistantSuggestion": [
         "INCORRECT"
       ]
@@ -506,7 +504,7 @@
       "modelState": "COVERED",
       "agrees": true,
       "disputed": true,
-      "assistantReason": "回答已说明快照读与锁定读机制不同、涉及 gap/next-key locking 和版本/读取类型；是否还必须补充幻读后果属于评分点边界争议。",
+      "assistantReason": "?????????????????????? gap/next-key locking??????????????????????????????????",
       "originalAssistantSuggestion": [
         "COVERED"
       ]
@@ -702,11 +700,11 @@
       "id": "c3-correct",
       "topicId": "redis.cache-failures",
       "rubricPointId": "mitigation",
-      "assistantGoldState": "INCORRECT",
+      "assistantGoldState": "COVERED",
       "modelState": "COVERED",
-      "agrees": false,
+      "agrees": true,
       "disputed": false,
-      "assistantReason": "回答颠倒故障类型或否认资料列出的治理方式。",
+      "assistantReason": "??????????????????????????",
       "originalAssistantSuggestion": [
         "COVERED"
       ]
@@ -782,11 +780,11 @@
       "id": "c5-correct",
       "topicId": "redis.cache-failures",
       "rubricPointId": "failure-distinction",
-      "assistantGoldState": "INCORRECT",
+      "assistantGoldState": "COVERED",
       "modelState": "COVERED",
-      "agrees": false,
+      "agrees": true,
       "disputed": false,
-      "assistantReason": "回答颠倒故障类型或否认资料列出的治理方式。",
+      "assistantReason": "??????????????????????????????",
       "originalAssistantSuggestion": [
         "COVERED"
       ]
