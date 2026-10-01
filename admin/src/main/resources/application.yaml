@@ -123,6 +123,7 @@ xunzhi-agent:
     scheduled-pool-size: 8
     scheduled-thread-name-prefix: xunzhi-schedule-
   agent-binding:
+    interview-grounded-evaluation: ${XUNZHI_AGENT_INTERVIEW_GROUNDED_EVALUATION:Grounded Interview Evaluator v1}
     general-agent-chat: ${XUNZHI_AGENT_GENERAL_CHAT:通用智能体}
     interview-question-extraction: ${XUNZHI_AGENT_INTERVIEW_QUESTION_EXTRACTION:面试出题官}
     interview-answer-evaluation: ${XUNZHI_AGENT_INTERVIEW_ANSWER_EVALUATION:用户答案评分官}
@@ -223,6 +224,13 @@ xunzhi-agent:
         compression-codec: gzip
         l1-cache-enabled: false
   interview:
+    adaptive:
+      enabled: ${INTERVIEW_ADAPTIVE_ENABLED:false}
+      mode: ${INTERVIEW_ADAPTIVE_MODE:SHADOW}
+      max-per-main: ${INTERVIEW_ADAPTIVE_MAX_PER_MAIN:2}
+      max-per-session: ${INTERVIEW_ADAPTIVE_MAX_PER_SESSION:6}
+      emergency-disable-follow-up: ${INTERVIEW_ADAPTIVE_STOP_FOLLOW_UP:false}
+      report-worker-enabled: ${INTERVIEW_ADAPTIVE_REPORT_WORKER:true}
     answer-guard:
       lock-expire-seconds: -1
       lock-watchdog-enabled: true

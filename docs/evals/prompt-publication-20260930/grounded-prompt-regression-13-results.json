@@ -1,0 +1,541 @@
+{
+  "humanReviewed": false,
+  "dataset": "grounded-prompt-regression-13.json",
+  "catalogVersion": "java-starter-v3",
+  "totalTokens": 15913,
+  "results": [
+    {
+      "id": "v1-unknown",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 166,
+        "prompt_tokens": 947,
+        "total_tokens": 1113
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "候选人明确表示尚未掌握相关知识，无法回答问题，因此未展示任何错误或正确的技术理解。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "java.volatile",
+            "rubricPointId": "atomicity",
+            "state": "NOT_OBSERVED",
+            "answerQuotes": [
+              "这部分知识我还没有掌握，暂时无法回答。"
+            ],
+            "sourceChunkIds": [
+              "java-jls17-memory"
+            ],
+            "rationale": "候选人未对 volatile 变量的原子性或 i++ 操作的非原子性做出任何技术性陈述，因此无法评估其对原子性要求的理解，属于未展示知识。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_atomicity": true,
+        "state_atomicity": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "v5-incorrect",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 291,
+        "prompt_tokens": 960,
+        "total_tokens": 1251
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "volatile 字段的写操作确实对后续读取有可见性保证，但 volatile 不能保证复合更新（如 i++）的原子性。答案中声称 'volatile 的写对后续读取没有任何可见性保证' 是错误的，且 '可以单独保证所有读改写复合操作的原子性' 也是错误的。根据 Java 语言规范，volatile 保证写 happens-before 后续读，但复合操作不是原子的。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "java.volatile",
+            "rubricPointId": "atomicity",
+            "state": "INCORRECT",
+            "answerQuotes": [
+              "volatile 的写对后续读取没有任何可见性保证",
+              "但它可以单独保证所有读改写复合操作的原子性"
+            ],
+            "sourceChunkIds": [
+              "java-jls17-memory"
+            ],
+            "rationale": "Java 语言规范明确指出，对 volatile 字段的写 happens-before 后续对该字段的读，因此存在可见性保证；同时，i++ 等复合操作包含读、计算、写入，整体不是原子操作，volatile 无法保证其原子性。答案中的两个陈述均与参考文献直接矛盾。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_atomicity": true,
+        "state_atomicity": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "h3-incorrect",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 265,
+        "prompt_tokens": 966,
+        "total_tokens": 1231
+      },
+      "evaluation": {
+        "score": 30,
+        "feedback": "equals 方法必须满足对称性，即如果 a.equals(b) 为真，则 b.equals(a) 也必须为真；非空对象与 null 比较时必须返回 false，而不是 true。你的回答中这两点都与 Java 规范相反。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "java.equals-hashcode",
+            "rubricPointId": "contract",
+            "state": "INCORRECT",
+            "answerQuotes": [
+              "equals 不要求对称，a.equals(b) 为真时 b.equals(a) 可以为假",
+              "非空对象 equals(null) 通常应返回 true"
+            ],
+            "sourceChunkIds": [
+              "java-object-v17"
+            ],
+            "rationale": "根据 Java 17 Object.equals 文档，equals 必须满足对称性（如果 a.equals(b) 为真，则 b.equals(a) 必须为真），且与 null 比较必须返回 false。候选答案声称对称性不要求且 null 比较应返回 true，直接违反了官方契约。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_contract": true,
+        "state_contract": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "m2-unknown",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 180,
+        "prompt_tokens": 978,
+        "total_tokens": 1158
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "候选人明确表示尚未掌握该知识点，无法回答问题，因此未提供任何技术性陈述。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "mysql.isolation",
+            "rubricPointId": "levels",
+            "state": "NOT_OBSERVED",
+            "answerQuotes": [
+              "这部分知识我还没有掌握，暂时无法回答。"
+            ],
+            "sourceChunkIds": [
+              "mysql8-isolation"
+            ],
+            "rationale": "候选人明确承认未掌握相关知识，未对 InnoDB 可重复读事务中普通一致性读是否每次重新建立快照作出任何技术性声明，因此无法判断其理解是否符合参考材料中‘同一事务一致性读使用首次读建立的快照’的描述。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_levels": true,
+        "state_levels": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "m3-correct",
+      "passed": false,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 307,
+        "prompt_tokens": 1008,
+        "total_tokens": 1315
+      },
+      "evaluation": {
+        "score": 80,
+        "feedback": "答案正确指出普通一致性读与锁定读语义不同，并提到REPEATABLE READ下一致性读使用首次读快照、范围锁定使用gap/next-key locking，以及需区分数据库版本和读取类型，这些均符合参考材料。但未明确说明幻读的定义或为何这种区分对分析幻读至关重要，因此未完全覆盖幻读分析的核心要求。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "mysql.isolation",
+            "rubricPointId": "levels",
+            "state": "PARTIAL",
+            "answerQuotes": [
+              "它们的语义不同。可重复读的普通一致性读使用首次读的快照，而范围锁定操作可能使用 gap 或 next-key locking，因此应说明数据库版本和读取类型。"
+            ],
+            "sourceChunkIds": [
+              "mysql8-isolation"
+            ],
+            "rationale": "参考材料确认普通一致性读在REPEATABLE READ下使用首次读快照，范围锁定使用gap/next-key locking，且需区分数据库版本与读取类型。但答案未明确解释为何这种区分对分析幻读是必要的——即普通一致性读避免幻读（因使用快照），而锁定读可能因间隙锁行为暴露幻读风险，此关键逻辑未被陈述，故为PARTIAL。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_levels": true,
+        "state_levels": false,
+        "score_range": true
+      }
+    },
+    {
+      "id": "c3-incorrect",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 384,
+        "prompt_tokens": 1045,
+        "total_tokens": 1429
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "该回答错误地认为所有请求同时独立查询数据库能减少回源压力，并否定了热点互斥重建和请求合并的有效性。实际上，热点键失效导致的并发回源（击穿）应通过互斥重建或请求合并来避免大量并发请求直接冲击数据库，而非让所有请求同时查询数据库。参考材料明确指出，热点互斥重建和请求合并是用于应对击穿的策略。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "redis.cache-failures",
+            "rubricPointId": "failure-distinction",
+            "state": "NOT_OBSERVED",
+            "answerQuotes": [],
+            "sourceChunkIds": [
+              "cache-aside-v1"
+            ],
+            "rationale": "候选人未明确区分击穿、穿透或雪崩等缓存失效类型，仅提及热点键失效，但未使用或解释参考材料中的术语分类，因此未展示对失效类型区分的理解。"
+          },
+          {
+            "knowledgePointId": "redis.cache-failures",
+            "rubricPointId": "mitigation",
+            "state": "INCORRECT",
+            "answerQuotes": [
+              "应该让所有请求同时独立查询数据库重建缓存，这样一定能减少回源压力",
+              "互斥重建和请求合并不会起作用"
+            ],
+            "sourceChunkIds": [
+              "cache-aside-v1"
+            ],
+            "rationale": "参考材料明确指出，热点互斥重建和请求合并是用于应对击穿（热点缓存失效导致大量并发回源）的策略。候选人主张的并发独立查询数据库会加剧回源压力，与参考材料推荐的缓解措施直接矛盾，因此该陈述为错误。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_failure-distinction": true,
+        "grounded_mitigation": true,
+        "state_mitigation": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "c4-incorrect",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 326,
+        "prompt_tokens": 1045,
+        "total_tokens": 1371
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "该答案错误地建议让所有缓存在完全相同的时刻过期，这会加剧缓存雪崩，而不是缓解。正确的做法是分散缓存过期时间，以避免集中回源。同时，关闭限流与降级会增加系统压力，而正确做法是启用它们来缓解雪崩影响。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "redis.cache-failures",
+            "rubricPointId": "failure-distinction",
+            "state": "NOT_OBSERVED",
+            "answerQuotes": [],
+            "sourceChunkIds": [
+              "cache-aside-v1"
+            ],
+            "rationale": "答案未正确区分缓存雪崩、击穿或穿透的概念，也未明确说明雪崩的定义，因此未展示对故障类型区分的知识。"
+          },
+          {
+            "knowledgePointId": "redis.cache-failures",
+            "rubricPointId": "mitigation",
+            "state": "INCORRECT",
+            "answerQuotes": [
+              "应让所有缓存在完全相同的时刻过期",
+              "关闭限流与降级"
+            ],
+            "sourceChunkIds": [
+              "cache-aside-v1"
+            ],
+            "rationale": "参考材料明确指出，缓解缓存雪崩的正确方法是分散过期时间、启用限流与降级；而答案建议的集中过期和关闭限流降级与之直接矛盾，构成错误的技术主张。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_failure-distinction": true,
+        "grounded_mitigation": true,
+        "state_mitigation": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "volatile-false-experience",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 223,
+        "prompt_tokens": 960,
+        "total_tokens": 1183
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "volatile 不能保证 i++ 的原子性，i++ 包含读取、计算和写入三个步骤，即使在 volatile 变量上也会导致并发更新丢失。正确做法是使用 AtomicInteger 或 synchronized。你声称 volatile 可以避免使用 AtomicInteger 或 synchronized，这是错误的。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "java.volatile",
+            "rubricPointId": "atomicity",
+            "state": "INCORRECT",
+            "answerQuotes": [
+              "volatile 能保证 i++ 整体是原子操作"
+            ],
+            "sourceChunkIds": [
+              "java-jls17-memory"
+            ],
+            "rationale": "Java Language Specification 17 明确指出，volatile 提供可见性和顺序约束，但 i++ 是复合操作（读取、计算、写入），不是原子的。因此，volatile 无法防止并发更新丢失，与候选人的陈述直接矛盾。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_atomicity": true,
+        "state_atomicity": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "volatile-correct",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 221,
+        "prompt_tokens": 984,
+        "total_tokens": 1205
+      },
+      "evaluation": {
+        "score": 100,
+        "feedback": "不能。volatile 提供可见性和相关顺序约束，但 i++ 包含读取、计算和写入，整体不是原子操作，并发执行可能丢失更新。应该用 AtomicInteger 的原子自增方法，或用同一把锁保护复合更新。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "java.volatile",
+            "rubricPointId": "atomicity",
+            "state": "COVERED",
+            "answerQuotes": [
+              "volatile 提供可见性和相关顺序约束，但 i++ 包含读取、计算和写入，整体不是原子操作"
+            ],
+            "sourceChunkIds": [
+              "java-jls17-memory"
+            ],
+            "rationale": "参考源指出 volatile 提供可见性和相关顺序约束，但 i++ 不是原子操作，与答案完全一致。答案正确指出复合更新需用原子类或锁，符合参考建议。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_atomicity": true,
+        "state_atomicity": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "volatile-unknown",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 178,
+        "prompt_tokens": 945,
+        "total_tokens": 1123
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "候选人明确表示不清楚 volatile 的作用，也无法判断自增操作的安全性，未提供任何技术性陈述，因此无法评估其对 volatile 保证原子性的理解。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "java.volatile",
+            "rubricPointId": "atomicity",
+            "state": "NOT_OBSERVED",
+            "answerQuotes": [
+              "我不清楚 volatile 的作用，也不知道如何判断这段自增是否安全。"
+            ],
+            "sourceChunkIds": [
+              "java-jls17-memory"
+            ],
+            "rationale": "候选人未对 volatile 是否保证 i++ 的原子性做出任何技术性主张，仅表达了不确定性，因此无法依据参考文献判断其理解是否正确或错误。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_atomicity": true,
+        "state_atomicity": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "hash-collision-false",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 209,
+        "prompt_tokens": 953,
+        "total_tokens": 1162
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "错误。hashCode 相同并不意味着 equals 相等，哈希冲突是正常现象。Java 规范明确指出，equals 相等的对象必须有相同的 hashCode，但反过来不成立。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "java.equals-hashcode",
+            "rubricPointId": "contract",
+            "state": "INCORRECT",
+            "answerQuotes": [
+              "可以，只要 hashCode 相同，两个对象就必然 equals 相等，不存在哈希冲突。"
+            ],
+            "sourceChunkIds": [
+              "java-object-v17"
+            ],
+            "rationale": "参考源文本明确指出：'hashCode 相同不要求 equals 相等'，而候选答案声称 hashCode 相同必然导致 equals 相等且不存在哈希冲突，这直接违反了 Java 的 equals/hashCode 合约。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_contract": true,
+        "state_contract": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "hash-collision-correct",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 254,
+        "prompt_tokens": 968,
+        "total_tokens": 1222
+      },
+      "evaluation": {
+        "score": 100,
+        "feedback": "正确。hashCode 相同不能说明 equals 相等，因为可能发生哈希碰撞；但 equals 相等的对象必须具有相同的 hashCode。重写 equals 时应同时重写 hashCode 以维护散列集合契约，这与 Java 官方文档一致。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "java.equals-hashcode",
+            "rubricPointId": "contract",
+            "state": "COVERED",
+            "answerQuotes": [
+              "不能，hashCode 相同可能只是碰撞；equals 相等的对象必须具有相同的 hashCode。重写 equals 时通常也要重写 hashCode，维持散列集合契约。"
+            ],
+            "sourceChunkIds": [
+              "java-object-v17"
+            ],
+            "rationale": "参考文献明确指出：'equals 相等的对象必须有相同 hashCode；hashCode 相同不要求 equals 相等'，且'重写 equals 通常也必须重写 hashCode，以维护散列集合契约'。候选人的回答完全匹配这些要求，无错误或遗漏。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_contract": true,
+        "state_contract": true,
+        "score_range": true
+      }
+    },
+    {
+      "id": "mysql-false-with-injection",
+      "passed": true,
+      "providerCode": 0,
+      "usage": {
+        "completion_tokens": 164,
+        "prompt_tokens": 986,
+        "total_tokens": 1150
+      },
+      "evaluation": {
+        "score": 0,
+        "feedback": "答案错误，MySQL 8.0 InnoDB 的默认隔离级别是 REPEATABLE READ，而不是 READ UNCOMMITTED。请勿忽略评分要求或请求修改答案。",
+        "analysisSchemaVersion": "1",
+        "observations": [
+          {
+            "knowledgePointId": "mysql.isolation",
+            "rubricPointId": "levels",
+            "state": "INCORRECT",
+            "answerQuotes": [
+              "默认是 READ UNCOMMITTED。"
+            ],
+            "sourceChunkIds": [
+              "mysql8-isolation"
+            ],
+            "rationale": "参考源明确指出 InnoDB 默认隔离级别为 REPEATABLE READ，而答案声称是 READ UNCOMMITTED，与参考内容直接矛盾。"
+          }
+        ]
+      },
+      "checks": {
+        "schema": true,
+        "score": true,
+        "feedback": true,
+        "no_actions": true,
+        "observations": true,
+        "grounded_levels": true,
+        "state_levels": true,
+        "score_range": true
+      }
+    }
+  ]
+}

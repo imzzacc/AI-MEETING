@@ -1,0 +1,36 @@
+{
+  "version": "java-starter-v3",
+  "scopes": {
+    "redis.cache-failures": {"roles": ["java-backend"], "technology": "redis", "versions": ["general-v1"]},
+    "java.equals-hashcode": {"roles": ["java-backend"], "technology": "java", "versions": ["17"]},
+    "java.volatile": {"roles": ["java-backend"], "technology": "java", "versions": ["17"]},
+    "mysql.isolation": {"roles": ["java-backend"], "technology": "mysql", "versions": ["8.0"]}
+  },
+  "topics": [
+    {
+      "id": "redis.cache-failures",
+      "aliases": ["缓存穿透", "缓存击穿", "缓存雪崩", "cache penetration", "cache stampede", "热点键失效", "热点缓存失效", "缓存同时过期", "缓存同时失效", "缓存和数据库都不存在", "缓存和数据源都不存在", "互斥重建", "请求合并"],
+      "rubricPoints": ["failure-distinction", "mitigation"],
+      "sources": [{"id": "cache-aside-v1", "title": "Cache-Aside pattern：缓存失效与回源", "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside", "version": "general-v1", "text": "Cache-aside 在缓存未命中时从数据源读取并填充缓存，缓存有过期时间；缓存与数据源不保证天然一致。工程中常用术语：穿透指反复请求缓存和数据源都不存在的数据；击穿指热点缓存失效导致大量并发回源；雪崩指大量缓存同时失效等造成集中回源。空值缓存和布隆过滤器常用于穿透；热点互斥重建、请求合并等用于击穿；分散过期时间、限流与降级用于雪崩。该术语分类为基于缓存模式的编辑归纳，不是来源原文逐字引述。"}],
+      "candidates": [
+        {"id": "redis-distinction-v1", "knowledgePointId": "redis.cache-failures", "gapKey": "failure-distinction", "question": "缓存穿透、击穿和雪崩的触发条件分别是什么？", "priority": 10, "seconds": 90, "neutral": true, "states": ["PARTIAL", "INCORRECT", "UNCERTAIN"]},
+        {"id": "redis-mitigation-v1", "knowledgePointId": "redis.cache-failures", "gapKey": "mitigation", "question": "热点缓存失效时，你会如何控制并发回源？", "priority": 20, "seconds": 90, "neutral": true, "states": ["PARTIAL", "INCORRECT"]}
+      ]
+    },
+    {
+      "id": "java.equals-hashcode", "aliases": ["hashcode", "equals", "哈希冲突"], "rubricPoints": ["contract"],
+      "sources": [{"id": "java-object-v17", "title": "Java 17 Object.equals / hashCode", "url": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html", "version": "java17", "text": "equals 相等的对象必须有相同 hashCode；hashCode 相同不要求 equals 相等。equals 应满足自反、对称、传递、一致以及与 null 比较为 false。重写 equals 通常也必须重写 hashCode，以维护散列集合契约。"}],
+      "candidates": [{"id": "equals-contract-v1", "knowledgePointId": "java.equals-hashcode", "gapKey": "contract", "question": "equals 与 hashCode 需要满足什么约束？两个对象哈希值相同说明什么？", "priority": 10, "seconds": 90, "neutral": true, "states": ["PARTIAL", "INCORRECT", "UNCERTAIN"]}]
+    },
+    {
+      "id": "java.volatile", "aliases": ["volatile", "可见性"], "rubricPoints": ["atomicity"],
+      "sources": [{"id": "java-jls17-memory", "title": "Java Language Specification 17, Memory Model", "url": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-17.html", "version": "java17", "text": "对 volatile 字段的写 happens-before 后续对该字段的读。volatile 提供可见性和相关顺序约束，但 i++ 包含读取、计算和写入，整体不是原子操作。复合更新可使用锁或符合语义的原子类。"}],
+      "candidates": [{"id": "volatile-atomicity-v1", "knowledgePointId": "java.volatile", "gapKey": "atomicity", "question": "volatile 修饰的计数器执行自增时，能否保证并发更新正确？为什么？", "priority": 10, "seconds": 90, "neutral": true, "states": ["PARTIAL", "INCORRECT", "UNCERTAIN"]}]
+    },
+    {
+      "id": "mysql.isolation", "aliases": ["事务隔离", "隔离级别", "isolation level", "幻读", "read committed", "repeatable read", "可重复读", "一致性读", "锁定读", "快照读", "next-key", "间隙锁"], "rubricPoints": ["levels"],
+      "sources": [{"id": "mysql8-isolation", "title": "MySQL 8.0 InnoDB Transaction Isolation Levels", "url": "https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html", "version": "mysql8", "text": "InnoDB 提供 READ UNCOMMITTED、READ COMMITTED、REPEATABLE READ、SERIALIZABLE，默认 REPEATABLE READ。普通一致性读与锁定读语义不同。REPEATABLE READ 下同一事务一致性读使用首次读建立的快照；范围锁定操作可使用 gap/next-key locking。判断幻读时应说明数据库版本与读的类型，不能只用泛化标准断言所有实现完全相同。"}],
+      "candidates": [{"id": "mysql-isolation-v1", "knowledgePointId": "mysql.isolation", "gapKey": "levels", "question": "在 InnoDB 中，普通快照读和锁定读在可重复读级别下有什么区别？", "priority": 10, "seconds": 120, "neutral": true, "states": ["PARTIAL", "INCORRECT"]}]
+    }
+  ]
+}

@@ -51,6 +51,13 @@ public class InterviewSessionFacade {
     private final InterviewSessionRuntimeSnapshotService runtimeSnapshotService;
     private final InterviewSessionRuntimeRehydrateService runtimeRehydrateService;
 
+    private com.hewei.hzyjy.xunzhi.interview.adaptive.AdaptiveInterviewService adaptive;
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public void setAdaptive(com.hewei.hzyjy.xunzhi.interview.adaptive.AdaptiveInterviewService adaptive) {
+        this.adaptive = adaptive;
+    }
+
     public InterviewSessionCreateRespDTO createSession(Long userId) {
         return interviewSessionService.createSession(userId);
     }
@@ -76,6 +83,7 @@ public class InterviewSessionFacade {
     }
 
     public void finishSession(String sessionId, Long userId) {
+        if (adaptive != null && adaptive.active(sessionId)) { adaptive.finish(sessionId, userId); return; }
         // 1) 统一走 finalize 收口：落记录 + 补齐会话结束态（内部含锁与重试）。
         interviewRecordService.saveInterviewRecordFromRedis(sessionId, userId);
     }
@@ -89,6 +97,17 @@ public class InterviewSessionFacade {
             MultipartFile resumePdf,
             Long userId,
             String username) {
+        if (adaptive != null && adaptive.active(sessionId)) {
+            return adaptive.locked(sessionId, () -> {
+                var session = interviewSessionService.requireOwnedSession(sessionId, userId);
+                if (!"DRAFT".equals(session.getStatus())) throw new ClientException("主问题已生成，请新建面试以更换简历");
+                return extractQuestions(sessionId, resumePdf, userId, username);
+            });
+        }
+        return extractQuestions(sessionId, resumePdf, userId, username);
+    }
+
+    private InterviewQuestionRespDTO extractQuestions(String sessionId, MultipartFile resumePdf, Long userId, String username) {
         // 1) 进入提取前先把会话打到“上传中”，避免并发接口误判状态。
         interviewSessionService.markResumeUploading(sessionId, userId);
 
@@ -121,6 +140,7 @@ public class InterviewSessionFacade {
             InterviewAnswerReqDTO requestParam,
             Long userId) {
         // 1) 先校验会话可继续（归属 + 状态）。
+        if (adaptive != null && adaptive.active(sessionId)) return adaptive.answer(sessionId, userId, requestParam);
         ensureInterviewCanProceed(sessionId, userId);
         // 2) 首次答题把 READY 提升到 IN_PROGRESS。
         interviewSessionService.markInProgressIfReady(sessionId, userId);
@@ -130,12 +150,14 @@ public class InterviewSessionFacade {
     }
 
     public InterviewAnswerRespDTO getNextQuestion(String sessionId, Long userId) {
+        if (adaptive != null && adaptive.active(sessionId)) return adaptive.current(sessionId, userId);
         ensureInterviewCanProceed(sessionId, userId);
         interviewSessionService.markInProgressIfReady(sessionId, userId);
         return interviewWorkflowService.getNextQuestion(sessionId);
     }
 
     public InterviewAnswerRespDTO getCurrentQuestion(String sessionId, Long userId) {
+        if (adaptive != null && adaptive.active(sessionId)) return adaptive.current(sessionId, userId);
         ensureInterviewCanProceed(sessionId, userId);
         InterviewAnswerRespDTO response = interviewWorkflowService.getCurrentQuestion(sessionId);
         if (response != null && Boolean.TRUE.equals(response.getIsSuccess()) && !Boolean.TRUE.equals(response.getFinished())) {
@@ -150,6 +172,13 @@ public class InterviewSessionFacade {
     }
 
     public InterviewSessionRestoreRespDTO restoreInterviewSession(String sessionId, Long userId) {
+        if (adaptive != null && adaptive.active(sessionId)) {
+            return adaptive.locked(sessionId, () -> restoreOwnedInterviewSession(sessionId, userId));
+        }
+        return restoreOwnedInterviewSession(sessionId, userId);
+    }
+
+    private InterviewSessionRestoreRespDTO restoreOwnedInterviewSession(String sessionId, Long userId) {
         // 1) 先恢复会话主信息（状态、简历、方向等主字段）。
         InterviewSession session = interviewSessionService.requireOwnedSession(sessionId, userId);
         runtimeRehydrateService.ensureRuntime(sessionId, InterviewRuntimeLoadMode.READ_ONLY, InterviewRuntimeRehydrateScope.MATERIAL_ONLY);
@@ -160,6 +189,12 @@ public class InterviewSessionFacade {
         response.setCanResume(isSessionResumable(session));
         response.setResumeFileUrl(session.getResumeFileUrl());
         response.setInterviewType(session.getInterviewType());
+        if (adaptive != null && adaptive.active(sessionId)) {
+            var adaptiveSession = adaptive.owned(sessionId, userId);
+            response.setTimeBudget(adaptive.budget(sessionId, userId));
+            response.setReportStatus(adaptiveSession.getReportStatus());
+            response.setCanResume(!adaptiveSession.isFinished() && isSessionResumable(session));
+        }
 
         // 2) 再用 question 表补齐 resume/interviewType/resumeScore，降低对缓存依赖。
         InterviewQuestion question = interviewQuestionService.getBySessionId(sessionId);
@@ -209,6 +244,7 @@ public class InterviewSessionFacade {
     }
 
     public Integer getSessionTotalScore(String sessionId, Long userId) {
+        if (adaptive != null && adaptive.active(sessionId)) return adaptive.owned(sessionId, userId).totalScore();
         interviewSessionService.requireOwnedSession(sessionId, userId);
         runtimeRehydrateService.ensureRuntime(sessionId, InterviewRuntimeLoadMode.READ_ONLY, InterviewRuntimeRehydrateScope.SCORE_ONLY);
         // 分数读取顺序：缓存 > 记录快照，避免缓存丢失导致分数回退。

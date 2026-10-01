@@ -15,6 +15,7 @@ out
 .DS_Store
 Thumbs.db
 node_modules
+frontend
 docs
 test_tts_stream.html
 doubao-integration.patch

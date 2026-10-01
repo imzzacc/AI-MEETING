@@ -1,0 +1,124 @@
+{
+  "humanReviewed" : false,
+  "modelCalls" : 0,
+  "catalogVersion" : "java-starter-v4",
+  "questionCount" : 20,
+  "retrievedAllExpected" : 19,
+  "perTopicHitAndTotal" : {
+    "java.equals-hashcode" : [ 5, 5 ],
+    "java.volatile" : [ 5, 5 ],
+    "mysql.isolation" : [ 4, 5 ],
+    "redis.cache-failures" : [ 5, 5 ]
+  },
+  "irrelevantNegatives" : {
+    "passed" : 4,
+    "total" : 4
+  },
+  "unsupportedVersionScopes" : {
+    "passed" : 4,
+    "total" : 4
+  },
+  "otherRoleHasNoTopics" : true,
+  "results" : [ {
+    "expectedSources" : [ "java-jls17-memory" ],
+    "questionId" : "s01",
+    "actualSources" : [ "java-jls17-memory" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-jls17-memory" ],
+    "questionId" : "s02",
+    "actualSources" : [ "java-jls17-memory" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-jls17-memory" ],
+    "questionId" : "s03",
+    "actualSources" : [ "java-jls17-memory" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-jls17-memory" ],
+    "questionId" : "s04",
+    "actualSources" : [ "java-jls17-memory" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-jls17-memory" ],
+    "questionId" : "s05",
+    "actualSources" : [ "java-jls17-memory" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-object-v17" ],
+    "questionId" : "s06",
+    "actualSources" : [ "java-object-v17" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-object-v17" ],
+    "questionId" : "s07",
+    "actualSources" : [ "java-object-v17" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-object-v17" ],
+    "questionId" : "s08",
+    "actualSources" : [ "java-object-v17" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-object-v17" ],
+    "questionId" : "s09",
+    "actualSources" : [ "java-object-v17" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "java-object-v17" ],
+    "questionId" : "s10",
+    "actualSources" : [ "java-object-v17" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "mysql8-isolation" ],
+    "questionId" : "s11",
+    "actualSources" : [ "mysql8-isolation" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "mysql8-isolation" ],
+    "questionId" : "s12",
+    "actualSources" : [ "mysql8-isolation" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "mysql8-isolation" ],
+    "questionId" : "s13",
+    "actualSources" : [ "mysql8-isolation" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "mysql8-isolation" ],
+    "questionId" : "s14",
+    "actualSources" : [ "mysql8-isolation" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "mysql8-isolation" ],
+    "questionId" : "s15",
+    "actualSources" : [ ],
+    "allExpectedRetrieved" : false
+  }, {
+    "expectedSources" : [ "cache-aside-v1" ],
+    "questionId" : "s16",
+    "actualSources" : [ "cache-aside-v1" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "cache-aside-v1" ],
+    "questionId" : "s17",
+    "actualSources" : [ "cache-aside-v1" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "cache-aside-v1" ],
+    "questionId" : "s18",
+    "actualSources" : [ "cache-aside-v1" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "cache-aside-v1" ],
+    "questionId" : "s19",
+    "actualSources" : [ "cache-aside-v1" ],
+    "allExpectedRetrieved" : true
+  }, {
+    "expectedSources" : [ "cache-aside-v1" ],
+    "questionId" : "s20",
+    "actualSources" : [ "cache-aside-v1" ],
+    "allExpectedRetrieved" : true
+  } ],
+  "limits" : "AI-labeled source retrieval only, one reference source per topic. Not human Recall@6 certification or follow-up candidate selection quality. Unsupported product mentioned only in question text is not a structured scope override."
+}

@@ -809,7 +809,9 @@ public class XunfeiAudioService {
                 if (segment == null || segment.text == null) {
                     continue;
                 }
-                if (segment.segId < activeSegmentId || segment.finalized) {
+                // An expanding audio range can reuse an older segment ID. Its latest
+                // unfinalized snapshot is still live even when the packet ID advances.
+                if (segment.finalized || (segment.segId < activeSegmentId && segment.segId != segments.lastKey())) {
                     committed.append(segment.text);
                 }
             }

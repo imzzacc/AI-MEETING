@@ -1,0 +1,171 @@
+{
+  "recordedAt": "2026-09-30T09:41:40.392451+00:00",
+  "frontendSourceCommit": "ab5b7507db87df0ee150d686d6628c104039cc93",
+  "backendRuntime": {
+    "artifactSha256": "f16d114a481b73713d2da75ff1636b1a7f7fa777f6549aa6ff48e055dcf3bee1",
+    "gitSha": "4a483e118131c35a3fef265437c47c41726012c1",
+    "gitDirty": false
+  },
+  "unitAndService": {
+    "tests": 154,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "realMongo": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "frontend": {
+    "files": 22,
+    "tests": 100,
+    "lint": true,
+    "typecheck": true,
+    "build": true,
+    "testCommand": "npm run test:run -- --pool=threads --maxWorkers=1",
+    "previousFailure": "Fork workers timed out; complete scope rerun in threads, original failure log retained."
+  },
+  "browser": [
+    {
+      "scenario": "30-minute quick answers",
+      "passed": true,
+      "mainQuestions": 5,
+      "mainAnswers": 5,
+      "followupAnswers": 3,
+      "checks": [
+        "real_ui_login_create_policy_upload_original_workflow",
+        "reload_preserves_start",
+        "real_ui_login_create_policy_upload_original_workflow",
+        "reload_preserves_start",
+        "all_main_questions_unchanged_and_answered",
+        "automatic_finish",
+        "report_render_and_download"
+      ],
+      "pageErrors": [],
+      "startedAt": "2026-09-30T09:01:06.616Z",
+      "finishedAt": "2026-09-30T09:08:02.705Z"
+    },
+    {
+      "scenario": "20-minute actual wall-clock overtime",
+      "passed": true,
+      "mainQuestions": 10,
+      "mainAnswers": 10,
+      "followupAnswers": 0,
+      "checks": [
+        "real_ui_login_create_policy_upload_original_workflow",
+        "real_ui_login_create_policy_upload_original_workflow",
+        "actual_wall_clock_expiry_no_forced_finish",
+        "reload_preserves_start",
+        "all_main_questions_unchanged_and_answered",
+        "automatic_finish",
+        "report_render_and_download"
+      ],
+      "pageErrors": [],
+      "startedAt": "2026-09-30T09:12:28.173Z",
+      "finishedAt": "2026-09-30T09:36:38.405Z"
+    }
+  ],
+  "deletion": {
+    "passed": true,
+    "before": {
+      "interview_question": 1,
+      "interview_session_runtime_hot_snapshot": 1,
+      "interview_session_runtime_cold_snapshot": 1,
+      "interview_session_turn_archive": 8,
+      "agent_message": 0,
+      "agent_conversation": 0,
+      "mistake_source_links": 5,
+      "mysql_interview_record": 1,
+      "mysql_agent_file_asset": 0,
+      "redis_derived": 30
+    },
+    "after": {
+      "interview_question": 0,
+      "interview_session_runtime_hot_snapshot": 0,
+      "interview_session_runtime_cold_snapshot": 0,
+      "interview_session_turn_archive": 0,
+      "agent_message": 0,
+      "agent_conversation": 0,
+      "mistake_source_links": 0,
+      "mysql_interview_record": 0,
+      "mysql_agent_file_asset": 0,
+      "redis_derived": 0
+    }
+  },
+  "reportWorkerRecovery": {
+    "passed": true,
+    "fault": "expired report lease in isolated synthetic Mongo document",
+    "seconds": 4.12,
+    "checks": [
+      "scheduled_worker_reclaims_expired_lease",
+      "identical_report_content",
+      "unanswered_does_not_create_mistakes",
+      "real_report_api_succeeded"
+    ],
+    "beforeAttempts": 1,
+    "afterAttempts": 2,
+    "limit": "Single running application recovering an expired lease; not a two-process worker race."
+  },
+  "twoWorkerReportRecovery": {
+    "passed": true,
+    "servicePorts": [
+      18002,
+      18003
+    ],
+    "bothProcessesObservedContention": true,
+    "attemptIncrease": 1,
+    "seconds": 21.62,
+    "modelCalls": 0,
+    "checks": [
+      "two_processes_contend_for_same_expired_report",
+      "one_worker_reclaims_after_lock_expiry",
+      "identical_report_content",
+      "no_duplicate_mistakes"
+    ]
+  },
+  "legacyCompatibility": {
+    "passed": true,
+    "checks": [
+      "legacy_creation_without_policy",
+      "original_question_workflow",
+      "no_adaptive_time_budget",
+      "legacy_scoring_and_response",
+      "original_questions_unchanged",
+      "manual_finish",
+      "legacy_restore_without_time_budget"
+    ],
+    "modelRequestLimit": "One resume extraction and one answer submission; no application retry.",
+    "answerHttp": 200,
+    "answerCode": "0",
+    "answerSucceeded": true,
+    "answerError": null
+  },
+  "concurrentReads": {
+    "passed": true,
+    "requests": 10
+  },
+  "modelEvaluation": {
+    "humanReviewed": false,
+    "strictPassed": 43,
+    "strictTotal": 60,
+    "baselineTokens": 62777,
+    "offlineValidatorDraftStateMatches": 59,
+    "offlineValidationIsSemanticAcceptance": false,
+    "latestLocalPromptPublished": false
+  },
+  "usage": {
+    "knownTotalTokens": 121341,
+    "authorizedCnyCeiling": 5,
+    "actualBilledCny": null,
+    "topupOrPurchase": false
+  },
+  "notCompleted": [
+    "human-reviewed independent quality evaluation",
+    "human-approved sources and mapping",
+    "publishing and live regression of latest prompt while Windows is locked",
+    "real voice/camera verification",
+    "remaining fault injection matrix beyond recorded scenarios"
+  ]
+}

@@ -16,9 +16,9 @@
 
 | 键 | 值 |
 | --- | --- |
-| `xunfei.lat-key.api-key` | `${XUNFEI_API_KEY:e8565c438f59b301616e0498a86ad95d}` |
-| `xunfei.lat-key.api-secret` | `${XUNFEI_API_SECRET:OGZkZGQ5ZDY0Yzc4MTllZWI3ZmU2MDU4}` |
-| `xunfei.lat-key.app-id` | `${XUNFEI_APP_ID:96f3a359}` |
+| `xunfei.lat-key.api-key` | `${XUNFEI_API_KEY:}` |
+| `xunfei.lat-key.api-secret` | `${XUNFEI_API_SECRET:}` |
+| `xunfei.lat-key.app-id` | `${XUNFEI_APP_ID:}` |
 | `xunfei.lat-key.rta-api-key` | `${XUNFEI_RTA_API_KEY:}` |
 
 ## xunzhi-agent.agent-binding
@@ -28,6 +28,7 @@
 | `xunzhi-agent.agent-binding.general-agent-chat` | `${XUNZHI_AGENT_GENERAL_CHAT:通用智能体}` |
 | `xunzhi-agent.agent-binding.interview-answer-evaluation` | `${XUNZHI_AGENT_INTERVIEW_ANSWER_EVALUATION:用户答案评分官}` |
 | `xunzhi-agent.agent-binding.interview-demeanor` | `${XUNZHI_AGENT_INTERVIEW_DEMEANOR:神态分析官}` |
+| `xunzhi-agent.agent-binding.interview-grounded-evaluation` | `${XUNZHI_AGENT_INTERVIEW_GROUNDED_EVALUATION:Grounded Interview Evaluator v1}` |
 | `xunzhi-agent.agent-binding.interview-question-asking` | `${XUNZHI_AGENT_INTERVIEW_QUESTION_ASKING:面试提问官}` |
 | `xunzhi-agent.agent-binding.interview-question-extraction` | `${XUNZHI_AGENT_INTERVIEW_QUESTION_EXTRACTION:面试出题官}` |
 

@@ -1,0 +1,831 @@
+{
+  "reviewerType": "assistant",
+  "humanReviewed": false,
+  "assistantReviewedAt": "2026-10-01",
+  "dataset": "grounded-review-draft-60.json",
+  "formalAcceptanceEligible": false,
+  "note": "Legacy heuristic audit, corrected after six labeling errors. Its 60 agreements compare only one selected observation per answer and silently treat missing observations as NOT_OBSERVED. Do not infer 60/60 strict success, source support, or reliable precision/recall. Original provider baseline remains 43/60 strict. Only m3-correct has explicit user confirmation.",
+  "counts": {
+    "cases": 60,
+    "agreements": 60,
+    "disputed": 0,
+    "confusion": {
+      "COVERED->COVERED": 20,
+      "INCORRECT->INCORRECT": 20,
+      "NOT_OBSERVED->NOT_OBSERVED": 20
+    },
+    "comparisonScope": "Only the first observation for the designated rubric; missing observations were mapped to NOT_OBSERVED. Not a full evaluation pass rate."
+  },
+  "cases": [
+    {
+      "id": "v1-correct",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确区分可见性与复合更新原子性，并给出原子类或同一把锁。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "v1-incorrect",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答把 volatile 与复合 i++ 原子性混同，或否认可见性/锁需求，与 java-jls17-memory 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "v1-unknown",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "v2-correct",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答说明复合读改写不因此原子执行，仍需要锁或原子类。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "v2-incorrect",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答把 volatile 与复合 i++ 原子性混同，或否认可见性/锁需求，与 java-jls17-memory 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "v2-unknown",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "v3-correct",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答保留了可见性与复合更新非原子之间的边界，符合 java-jls17-memory。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "v3-incorrect",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答把 volatile 与复合 i++ 原子性混同，或否认可见性/锁需求，与 java-jls17-memory 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "v3-unknown",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "v4-correct",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答保留了可见性与复合更新非原子之间的边界，符合 java-jls17-memory。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "v4-incorrect",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答把 volatile 与复合 i++ 原子性混同，或否认可见性/锁需求，与 java-jls17-memory 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "v4-unknown",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "v5-correct",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答区分happens-before的可见性保证与i++的非原子性。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "v5-incorrect",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答把 volatile 与复合 i++ 原子性混同，或否认可见性/锁需求，与 java-jls17-memory 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "v5-unknown",
+      "topicId": "java.volatile",
+      "rubricPointId": "atomicity",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "h1-correct",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答符合 Java Object 契约：equals 相等要求相同 hashCode，反向不成立，或正确说明契约性质。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "h1-incorrect",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答反转了 equals/hashCode 契约或否认 equals 的基本性质，与 java-object-v17 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "h1-unknown",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "h2-correct",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答符合 Java Object 契约：equals 相等要求相同 hashCode，反向不成立，或正确说明契约性质。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "h2-incorrect",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答反转了 equals/hashCode 契约或否认 equals 的基本性质，与 java-object-v17 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "h2-unknown",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "h3-correct",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答符合 Java Object 契约：equals 相等要求相同 hashCode，反向不成立，或正确说明契约性质。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "h3-incorrect",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答否认equals的对称性，并错误声称非空对象equals(null)应返回true。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "h3-unknown",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "h4-correct",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答符合 Java Object 契约：equals 相等要求相同 hashCode，反向不成立，或正确说明契约性质。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "h4-incorrect",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答反转了 equals/hashCode 契约或否认 equals 的基本性质，与 java-object-v17 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "h4-unknown",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "h5-correct",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答符合 Java Object 契约：equals 相等要求相同 hashCode，反向不成立，或正确说明契约性质。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "h5-incorrect",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答反转了 equals/hashCode 契约或否认 equals 的基本性质，与 java-object-v17 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "h5-unknown",
+      "topicId": "java.equals-hashcode",
+      "rubricPointId": "contract",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "m1-correct",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答与 mysql8-isolation 对隔离级别、快照读或锁定读的描述一致。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "m1-incorrect",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答否认资料明确的隔离级别、快照或锁定读差异，与 mysql8-isolation 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "m1-unknown",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "m2-correct",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答与 mysql8-isolation 对隔离级别、快照读或锁定读的描述一致。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "m2-incorrect",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答否认资料明确的隔离级别、快照或锁定读差异，与 mysql8-isolation 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "m2-unknown",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "m3-correct",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答已覆盖普通一致性读快照、锁定读以及gap/next-key locking差异；用户认可COVERED。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ],
+      "humanConfirmation": {
+        "state": "COVERED",
+        "confirmedBy": "user",
+        "confirmedAt": "2026-10-01",
+        "note": "用户明确认可本条COVERED；不代表确认其余59条或全部上线指标。"
+      }
+    },
+    {
+      "id": "m3-incorrect",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答否认资料明确的隔离级别、快照或锁定读差异，与 mysql8-isolation 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "m3-unknown",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "m4-correct",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答与 mysql8-isolation 对隔离级别、快照读或锁定读的描述一致。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "m4-incorrect",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答否认资料明确的隔离级别、快照或锁定读差异，与 mysql8-isolation 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "m4-unknown",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "m5-correct",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答与 mysql8-isolation 对隔离级别、快照读或锁定读的描述一致。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "m5-incorrect",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答否认资料明确的隔离级别、快照或锁定读差异，与 mysql8-isolation 冲突。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "m5-unknown",
+      "topicId": "mysql.isolation",
+      "rubricPointId": "levels",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "c1-correct",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "failure-distinction",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答与 cache-aside-v1 对穿透、击穿、雪崩及治理方式的摘要一致。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "c1-incorrect",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "failure-distinction",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答颠倒故障类型或否认资料列出的治理方式。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "c1-unknown",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "failure-distinction",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "c2-correct",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答与 cache-aside-v1 对穿透、击穿、雪崩及治理方式的摘要一致。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "c2-incorrect",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答颠倒故障类型或否认资料列出的治理方式。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "c2-unknown",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "c3-correct",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答正确识别缓存击穿，给出互斥重建或请求合并。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "c3-incorrect",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答颠倒故障类型或否认资料列出的治理方式。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "c3-unknown",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "c4-correct",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答与 cache-aside-v1 对穿透、击穿、雪崩及治理方式的摘要一致。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "c4-incorrect",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答颠倒故障类型或否认资料列出的治理方式。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "c4-unknown",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "mitigation",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    },
+    {
+      "id": "c5-correct",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "failure-distinction",
+      "assistantGoldState": "COVERED",
+      "modelState": "COVERED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答正确区分单热点键失效的击穿与大批缓存同时失效的雪崩。",
+      "originalAssistantSuggestion": [
+        "COVERED"
+      ]
+    },
+    {
+      "id": "c5-incorrect",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "failure-distinction",
+      "assistantGoldState": "INCORRECT",
+      "modelState": "INCORRECT",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答颠倒故障类型或否认资料列出的治理方式。",
+      "originalAssistantSuggestion": [
+        "INCORRECT"
+      ]
+    },
+    {
+      "id": "c5-unknown",
+      "topicId": "redis.cache-failures",
+      "rubricPointId": "failure-distinction",
+      "assistantGoldState": "NOT_OBSERVED",
+      "modelState": "NOT_OBSERVED",
+      "agrees": true,
+      "disputed": false,
+      "assistantReason": "回答明确表示不知道，未提出可核验的技术主张。",
+      "originalAssistantSuggestion": [
+        "NOT_OBSERVED",
+        "UNCERTAIN"
+      ]
+    }
+  ],
+  "withdrawnClaims": [
+    "Earlier 95% precision and about 79.2% recall came from faulty heuristic labels and are withdrawn.",
+    "The later 60/60 first-observation agreement is not complete model acceptance."
+  ]
+}

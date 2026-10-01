@@ -53,9 +53,9 @@ flowData:
         required: true
         customParameterType: xfyun-file
       nodeParam:
-        apiKey: 5f93d1890c25748e68a514c62f79b8b1
+        apiKey: ''
         appId: a01c2bc7
-        apiSecret: ODc3MDhkZjA4M2E4ZDgzODM0MmY4MzZk
+        apiSecret: ''
       icon: https://oss-beijing-m8.openstorage.cn/pro-bucket/sparkBot/common/workflow/icon/start-node-icon.png
       description: 工作流的开启节点，用于定义流程调用所需的业务变量信息。
       updatable: false
@@ -273,10 +273,10 @@ flowData:
       nodeParam:
         template: ''
         streamOutput: true
-        apiKey: 5f93d1890c25748e68a514c62f79b8b1
+        apiKey: ''
         templateErrMsg: 值不能为空
         appId: a01c2bc7
-        apiSecret: ODc3MDhkZjA4M2E4ZDgzODM0MmY4MzZk
+        apiSecret: ''
         outputMode: 0
         reasoningTemplate: |-
           严格按照这个格式输出
@@ -415,11 +415,11 @@ flowData:
         uid: '0'
         code: ''
         toolDescription: 通用OCR大模型
-        apiKey: 5f93d1890c25748e68a514c62f79b8b1
+        apiKey: ''
         pluginId: tool@6dc893527421000
         appId: a01c2bc7
         operationId: 通用OCR大模型-bjzgpdk8
-        apiSecret: ODc3MDhkZjA4M2E4ZDgzODM0MmY4MzZk
+        apiSecret: ''
         version: V4.0
         businessInput: [
           ]
@@ -690,7 +690,7 @@ flowData:
           required: true
           key: domain
           desc: ''
-        apiKey: 5f93d1890c25748e68a514c62f79b8b1
+        apiKey: ''
         modelId: 10000021
         auditing: default
         llmId: 10000021
@@ -707,7 +707,7 @@ flowData:
         llmIdErrMsg: ''
         topK: 4
         enableChatHistory: true
-        apiSecret: ODc3MDhkZjA4M2E4ZDgzODM0MmY4MzZk
+        apiSecret: ''
         url: wss://maas-api.cn-huabei-1.xf-yun.com/v1.1/chat
         multiMode: false
         modelName: Qwen3-Next-80B-A3B-Instruct

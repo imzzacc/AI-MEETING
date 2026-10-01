@@ -41,6 +41,15 @@ public class InterviewQuestionLockService {
         }
     }
 
+    /** Adaptive aggregates serialize publication and projections for the entire model call. */
+    public RLock acquireAdaptive(String sessionId) throws InterruptedException {
+        if (StrUtil.isBlank(sessionId)) return null;
+        RLock lock = redissonClient.getLock(lockKey(sessionId, "adaptive-session"));
+        Long configured = configuration.getAdaptiveLockWaitMillis();
+        long waitMillis = configured == null || configured < 0 ? 2000L : configured;
+        return lock.tryLock(waitMillis, -1L, TimeUnit.MILLISECONDS) ? lock : null;
+    }
+
     private String lockKey(String sessionId, String questionNumber) {
         return LOCK_KEY_PREFIX + sessionId + ":" + questionNumber;
     }

@@ -1,0 +1,79 @@
+{
+  "date": "2026-09-30",
+  "backendRuntime": {
+    "artifactSha256": "7c084495fded729e943964eacbf02e9514afacccab74b9c6a74c04409b5c497d",
+    "gitSha": "01ffc2b1d55ba2997142ddff3c598abc481604ad",
+    "gitDirty": false
+  },
+  "backendTests": {
+    "surefire-reports": {
+      "tests": 160,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "failsafe-reports": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "offlineAudit": {
+    "recordedOutputs": 90,
+    "paidCalls": 0,
+    "prosePerturbationInvariant": true,
+    "revalidationStable": true,
+    "note": "Overlapping development cases. Proves unverified model prose does not reach grounded feedback; does not prove semantic state accuracy or human acceptance."
+  },
+  "finalBrowser": {
+    "passed": true,
+    "mainQuestions": 10,
+    "mainAnswers": 10,
+    "followupAnswers": 2,
+    "groundedFeedbackTurns": 6,
+    "checks": [
+      "real_ui_login_create_policy_upload_original_workflow",
+      "reload_preserves_start",
+      "all_main_questions_unchanged_and_answered",
+      "automatic_finish",
+      "report_render_and_download",
+      "grounded_feedback_in_answer_and_export"
+    ],
+    "pageErrors": []
+  },
+  "persistence": {
+    "passed": true,
+    "backendSourceCommit": "01ffc2b",
+    "groundedTurns": 6,
+    "partialObservations": 1,
+    "currentSessionMistakes": 4,
+    "unresolvedGapCardsPendingConfirmation": 1,
+    "checks": [
+      "answer_response_matches_persisted_feedback",
+      "grounded_feedback_uses_controlled_templates",
+      "mistake_explanations_use_controlled_templates",
+      "report_contains_grounded_feedback",
+      "unresolved_required_gaps_are_pending_confirmation"
+    ],
+    "modelCalls": 0,
+    "limit": "Synthetic personal session; validates persistence and presentation, not model state semantics."
+  },
+  "usage": {
+    "previousKnownTotalTokens": 164264,
+    "additionalTokens": 33365,
+    "knownTotalTokens": 197629,
+    "additionalCachedResponses": 26,
+    "allApplicationCachedResponses": 65,
+    "allApplicationTokens": 78932,
+    "authorizedCnyCeiling": 5,
+    "actualBilledCny": null,
+    "topupOrPurchase": false
+  },
+  "limitations": [
+    "No assertion of semantic scoring accuracy or human acceptance.",
+    "Unmapped questions retain their original AI feedback; no source-grounding claim.",
+    "Persisted earlier turns and reports are not silently rewritten.",
+    "No new voice/camera validation or comprehensive fault matrix."
+  ]
+}

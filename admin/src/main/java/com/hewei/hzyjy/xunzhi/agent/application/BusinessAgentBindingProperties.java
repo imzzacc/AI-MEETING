@@ -15,6 +15,8 @@ public class BusinessAgentBindingProperties {
 
     private String interviewAnswerEvaluation;
 
+    private String interviewGroundedEvaluation;
+
     private String interviewDemeanor;
 
     private String interviewQuestionAsking;
@@ -27,6 +29,7 @@ public class BusinessAgentBindingProperties {
             case GENERAL_AGENT_CHAT -> generalAgentChat;
             case INTERVIEW_QUESTION_EXTRACTION -> interviewQuestionExtraction;
             case INTERVIEW_ANSWER_EVALUATION -> interviewAnswerEvaluation;
+            case INTERVIEW_GROUNDED_EVALUATION -> interviewGroundedEvaluation;
             case INTERVIEW_DEMEANOR -> interviewDemeanor;
             case INTERVIEW_QUESTION_ASKING -> interviewQuestionAsking;
         };

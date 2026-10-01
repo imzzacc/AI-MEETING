@@ -1,0 +1,18 @@
+{
+  "humanReviewed": false,
+  "purpose": "One-call API smoke after restoring the committed prompt; not quality acceptance.",
+  "cases": [
+    {
+      "id": "volatile-false-experience",
+      "topicId": "java.volatile",
+      "question": "请描述你实际使用 volatile 和 AtomicInteger 的场景，并比较性能。",
+      "answer": "volatile 能保证 i++ 整体是原子操作，并发自增不会丢失更新，因此无需 AtomicInteger 或 synchronized。我没有做过性能对比。",
+      "expectedStates": {
+        "atomicity": [
+          "INCORRECT"
+        ]
+      },
+      "maxScore": 60
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "date": "2026-09-30",
+  "model": "Qwen3-Next-80B-A3B-Instruct",
+  "publishedPromptSha256": "423da21943964955dd2ebc1e99332d1044fbd4425a8b7521295a4438639be2f1",
+  "editorReadback": "Full prompt matches repository after whitespace normalization",
+  "publication": "API configuration updated and binding updated through authenticated UI",
+  "finalPrompt": "Committed prompt from 290f8d5, restored after expanded-prompt experiment",
+  "contractUnchanged": true,
+  "mainQuestionWorkflowUnchanged": true,
+  "regressions": [
+    {
+      "prompt": "committed",
+      "passed": 12,
+      "total": 13,
+      "totalTokens": 15913
+    },
+    {
+      "prompt": "expanded experiment; not retained online",
+      "passed": 13,
+      "total": 16,
+      "totalTokens": 22050
+    },
+    {
+      "prompt": "restored committed API smoke",
+      "passed": 1,
+      "total": 1,
+      "totalTokens": 1210
+    }
+  ],
+  "humanReviewed": false,
+  "formalQualityAcceptance": false,
+  "knownIssues": [
+    "m3-correct: unsupported phantom-read elaboration and PARTIAL versus draft COVERED label",
+    "Expanded experiment c3-incorrect: question text used as an answer quote",
+    "Expanded experiment volatile partial guard: NOT_OBSERVED versus draft PARTIAL; rubric scope requires human adjudication"
+  ],
+  "usage": {
+    "previousKnownTotalTokens": 121341,
+    "apiCalls": 30,
+    "apiTokens": 39173,
+    "webDebugCalls": 3,
+    "webDebugTokens": [
+      1183,
+      1367,
+      1200
+    ],
+    "knownTotalTokens": 164264,
+    "authorizedCnyCeiling": 5,
+    "actualBilledCny": null,
+    "topupOrPurchase": false,
+    "thisContinuationConservativeListPriceEstimateCny": 0.1717,
+    "estimateBasis": "All continuation Qwen tokens priced at the observed highest output list rate, 4 CNY/million; not an invoice"
+  }
+}

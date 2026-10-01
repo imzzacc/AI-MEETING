@@ -6,6 +6,8 @@ import java.util.Map;
 
 @Data
 public class InterviewSessionRestoreRespDTO {
+    private com.hewei.hzyjy.xunzhi.interview.adaptive.AdaptiveModels.Budget timeBudget;
+    private String reportStatus;
 
     private String sessionId;
 
