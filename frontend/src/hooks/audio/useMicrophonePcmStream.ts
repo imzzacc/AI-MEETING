@@ -15,6 +15,7 @@ export function useMicrophonePcmStream({
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const generationRef = useRef(0);
   const onChunkRef = useRef(onChunk);
   const onErrorRef = useRef(onError);
 
@@ -27,6 +28,7 @@ export function useMicrophonePcmStream({
   }, [onError]);
 
   const stop = useCallback(async () => {
+    generationRef.current += 1;
     if (processorRef.current) {
       processorRef.current.disconnect();
       processorRef.current = null;
@@ -43,13 +45,17 @@ export function useMicrophonePcmStream({
     }
 
     if (audioContextRef.current) {
-      await audioContextRef.current.close().catch(() => undefined);
+      const context = audioContextRef.current;
       audioContextRef.current = null;
+      await context.close().catch(() => undefined);
     }
   }, []);
 
   const start = useCallback(async () => {
-    await stop();
+    const stopping = stop();
+    const generation = generationRef.current;
+    await stopping;
+    if (generationRef.current !== generation) return;
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -58,6 +64,10 @@ export function useMicrophonePcmStream({
           sampleRate,
         },
       });
+      if (generationRef.current !== generation) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
       streamRef.current = stream;
 
       const AudioContextCtor =
@@ -71,6 +81,8 @@ export function useMicrophonePcmStream({
 
       const audioContext = new AudioContextCtor({ sampleRate });
       audioContextRef.current = audioContext;
+      await audioContext.resume();
+      if (generationRef.current !== generation) return;
 
       const source = audioContext.createMediaStreamSource(stream);
       sourceRef.current = source;
@@ -109,6 +121,7 @@ export function useMicrophonePcmStream({
       processor.connect(audioContext.destination);
       processorRef.current = processor;
     } catch (error) {
+      if (generationRef.current !== generation) return;
       await stop();
       throw error;
     }

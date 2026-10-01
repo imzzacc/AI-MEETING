@@ -16,6 +16,8 @@ export type SmartComposerViewProps = {
   actions?: React.ReactNode;
   className?: string;
   isRecording?: boolean;
+  isStarting?: boolean;
+  audioError?: string | null;
   onMicClick?: (event: React.MouseEvent) => void;
 };
 
@@ -31,6 +33,8 @@ export default function SmartComposerView({
   actions,
   className,
   isRecording = false,
+  isStarting = false,
+  audioError,
   onMicClick,
 }: SmartComposerViewProps) {
   const textareaRef = useTextareaAutosize(value);
@@ -48,7 +52,13 @@ export default function SmartComposerView({
           ref={textareaRef}
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder={isRecording ? "正在倾听中..." : placeholder}
+          placeholder={
+            isStarting
+              ? "正在连接语音识别..."
+              : isRecording
+                ? "正在倾听中..."
+                : placeholder
+          }
           rows={1}
           className="min-h-[44px] max-h-[200px] flex-1 resize-none border-0 bg-transparent px-0 py-2 text-lg shadow-none placeholder:text-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0"
           onKeyDown={(event) => {
@@ -57,7 +67,7 @@ export default function SmartComposerView({
               onSend?.();
             }
           }}
-          disabled={disabled || isRecording}
+          disabled={disabled || isRecording || isStarting}
         />
       </div>
 
@@ -93,12 +103,25 @@ export default function SmartComposerView({
               onClick={onMicClick}
               type="button"
               disabled={disabled}
+              aria-label={
+                isStarting
+                  ? "取消语音连接"
+                  : isRecording
+                    ? "停止语音回答"
+                    : "开始语音回答"
+              }
+              aria-pressed={isRecording}
             >
               <Mic className="h-5 w-5" />
             </Button>
           )}
         </div>
       </div>
+      {audioError && (
+        <p role="alert" className="px-4 pb-3 text-sm text-red-600">
+          {audioError}
+        </p>
+      )}
     </div>
   );
 }

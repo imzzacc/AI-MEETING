@@ -15,7 +15,9 @@ export class AudioToTextWebSocket {
   private pingInterval: ReturnType<typeof setInterval> | null = null;
   private pendingBinaryQueue: Array<ArrayBuffer | Blob> = [];
   private readonly maxPendingBinaryChunks = 24;
-  private hasOpened = false;
+  private transcriptionReady = false;
+  private intentionalClose = false;
+  private readyTimer: ReturnType<typeof setTimeout> | null = null;
   private lastMessageTimestamp = 0;
   private lastMessageKey: string | null = null;
 
@@ -23,6 +25,7 @@ export class AudioToTextWebSocket {
   public onFinal?: (text: string) => void;
   public onError?: (error: string) => void;
   public onConnected?: () => void;
+  public onReady?: () => void;
   public onDisconnected?: () => void;
 
   constructor(userId: string) {
@@ -63,16 +66,25 @@ export class AudioToTextWebSocket {
     }
 
     this.ws = new WebSocket(this.url);
+    const socket = this.ws;
+    this.intentionalClose = false;
+    this.transcriptionReady = false;
+    this.readyTimer = setTimeout(() => {
+      if (this.ws === socket && !this.transcriptionReady) {
+        this.onError?.("Transcription startup timed out");
+        this.disconnect();
+      }
+    }, 10000);
     this.resetMessageCursor();
 
     this.ws.onopen = () => {
+      if (this.ws !== socket) return;
       console.log("WebSocket Connected");
-      this.hasOpened = true;
-      this.flushPendingBinaryQueue();
       this.startPing();
     };
 
     this.ws.onmessage = (event) => {
+      if (this.ws !== socket) return;
       try {
         const data = JSON.parse(event.data) as AudioToTextIncomingMessage;
         this.handleMessage(data);
@@ -82,30 +94,32 @@ export class AudioToTextWebSocket {
     };
 
     this.ws.onerror = (error) => {
+      if (this.ws !== socket) return;
       console.error("WebSocket Error", error);
       this.onError?.("WebSocket connection error");
     };
 
     this.ws.onclose = (event) => {
+      if (this.ws !== socket) return;
       console.warn("WebSocket Disconnected", {
         code: event.code,
         reason: event.reason,
         wasClean: event.wasClean,
       });
       this.stopPing();
-      if (!this.hasOpened && event.code !== 1000) {
+      this.clearReadyTimer();
+      if (!this.intentionalClose) {
         const details = [event.code ? `code=${event.code}` : null, event.reason]
           .filter(Boolean)
           .join(", ");
         this.onError?.(
           details
-            ? `WebSocket closed before ready: ${details}`
-            : "WebSocket closed before ready",
+            ? `WebSocket disconnected: ${details}`
+            : "WebSocket disconnected",
         );
       }
       this.onDisconnected?.();
       this.ws = null;
-      this.hasOpened = false;
     };
   }
 
@@ -118,6 +132,10 @@ export class AudioToTextWebSocket {
     switch (event.kind) {
       case "reset":
         this.onTranscription?.("");
+        this.transcriptionReady = true;
+        this.clearReadyTimer();
+        this.flushPendingBinaryQueue();
+        this.onReady?.();
         break;
       case "replace":
         this.onTranscription?.(event.text);
@@ -163,9 +181,13 @@ export class AudioToTextWebSocket {
   }
 
   sendAudio(data: Blob | ArrayBuffer) {
-    if (this.ws?.readyState === WebSocket.OPEN) {
+    if (this.ws?.readyState === WebSocket.OPEN && this.transcriptionReady) {
       this.ws.send(data);
-    } else if (this.ws?.readyState === WebSocket.CONNECTING) {
+    } else if (
+      this.ws &&
+      (this.ws.readyState === WebSocket.CONNECTING ||
+        this.ws.readyState === WebSocket.OPEN)
+    ) {
       if (this.pendingBinaryQueue.length >= this.maxPendingBinaryChunks) {
         this.pendingBinaryQueue.shift();
       }
@@ -176,6 +198,9 @@ export class AudioToTextWebSocket {
   }
 
   disconnect() {
+    this.intentionalClose = true;
+    this.transcriptionReady = false;
+    this.clearReadyTimer();
     this.stopPing();
     this.pendingBinaryQueue = [];
     this.resetMessageCursor();
@@ -183,6 +208,11 @@ export class AudioToTextWebSocket {
       this.ws.close();
       this.ws = null;
     }
+  }
+
+  private clearReadyTimer() {
+    if (this.readyTimer) clearTimeout(this.readyTimer);
+    this.readyTimer = null;
   }
 
   private flushPendingBinaryQueue() {
@@ -209,11 +239,7 @@ export class AudioToTextWebSocket {
     event: ReturnType<typeof resolveAudioTranscriptionEvent>,
   ) {
     const text =
-      "text" in event
-        ? event.text
-        : "message" in event
-          ? event.message
-          : "";
+      "text" in event ? event.text : "message" in event ? event.message : "";
     const nextKey = `${event.kind}:${message.type ?? ""}:${text}`;
     const nextTimestamp =
       typeof message.timestamp === "number" ? message.timestamp : null;
