@@ -4,6 +4,7 @@ Without --generate only validate the dataset. Each live case has a fresh convers
 no retry, and a durable result before the next call. Credentials stay outside the repo.
 """
 import argparse
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -57,7 +58,8 @@ def assess(result, case, topic):
                      and all(s in permitted for s in sources))
             if o['state'] in {'COVERED', 'PARTIAL', 'INCORRECT'}:
                 valid = valid and bool(quotes) and bool(sources)
-        checks['grounded_' + str(key)] = bool(valid)
+        check_key = 'grounded_' + str(key)
+        checks[check_key] = checks.get(check_key, True) and bool(valid)
     for key, states in case['expectedStates'].items():
         matches = [o for o in observations if o.get('rubricPointId') == key]
         checks['state_' + key] = len(matches) == 1 and matches[0].get('state') in states
@@ -92,6 +94,10 @@ def main():
         p.error('Output exists; refusing accidental repeat calls or evidence overwrite')
     config = probe.read_config(args.config)
     report = {'humanReviewed': data.get('humanReviewed') is True, 'dataset': args.dataset.name,
+              'datasetSha256': hashlib.sha256(args.dataset.read_bytes()).hexdigest(),
+              'catalogSha256': hashlib.sha256((ROOT / 'admin/src/main/resources/knowledge/interview-catalog-v1.json').read_bytes()).hexdigest(),
+              'localPromptSha256': hashlib.sha256((ROOT / 'docs/grounded-evaluator-system-prompt.txt').read_bytes()).hexdigest(),
+              'promptHashLimit': 'Local template hash, not an attestation of the hosted workflow contents.',
               'catalogVersion': catalog['version'], 'totalTokens': 0, 'results': []}
     # Reserve output before the first paid request; never retry uncertain network outcomes.
     args.output.write_text(json.dumps(report), encoding='utf-8')
