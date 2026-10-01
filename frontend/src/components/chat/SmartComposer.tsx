@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import SmartComposerView, {
   type SmartComposerViewProps,
 } from "@/components/chat/SmartComposerView";
@@ -9,7 +8,7 @@ import {
 
 export type SmartComposerProps = Omit<
   SmartComposerViewProps,
-  "isRecording" | "onMicClick"
+  "isRecording" | "isStarting" | "audioError" | "onMicClick"
 >;
 
 export default function SmartComposer({
@@ -24,8 +23,14 @@ export default function SmartComposer({
   actions,
   className,
 }: SmartComposerProps) {
-  const { isRecording, transcription, error, startRecording, stopRecording } =
-    useAudioToText();
+  const {
+    isRecording,
+    isStarting,
+    transcription,
+    error,
+    startRecording,
+    stopRecording,
+  } = useAudioToText();
 
   useAudioToTextComposerBridge({
     enabled: showVoiceButton,
@@ -35,18 +40,12 @@ export default function SmartComposer({
     onChange,
   });
 
-  useEffect(() => {
-    if (error) {
-      console.error("Audio recording error:", error);
-    }
-  }, [error]);
-
   const handleMicClick = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
     if (disabled) return;
 
-    if (isRecording) {
+    if (isRecording || isStarting) {
       stopRecording();
     } else {
       startRecording();
@@ -66,6 +65,8 @@ export default function SmartComposer({
       actions={actions}
       className={className}
       isRecording={isRecording}
+      isStarting={isStarting}
+      audioError={error}
       onMicClick={handleMicClick}
     />
   );
