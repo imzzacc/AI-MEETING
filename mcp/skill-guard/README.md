@@ -23,38 +23,14 @@ py -3 mcp/skill-guard/server.py
 {
   "mcpServers": {
     "ai-meeting-skill-guard": {
-      "command": "python",
-      "args": [
-        "C:/Users/hp/Documents/Codex/2026-07-20/lishuangqiang-ai-meeting-https-github-com/work/AI-Meeting/mcp/skill-guard/server.py"
-      ]
+      "command": "python3",
+      "args": ["<仓库路径>/mcp/skill-guard/server.py"]
     }
   }
 }
 ```
 
-如果本机 `python` 不在 PATH 中，可以把 `command` 改成 `py`，并把 `args` 改成：
-
-```json
-[
-  "-3",
-  "C:/Users/hp/Documents/Codex/2026-07-20/lishuangqiang-ai-meeting-https-github-com/work/AI-Meeting/mcp/skill-guard/server.py"
-]
-```
-
-在 Codex Desktop 当前运行时里，也可以直接使用内置 Python：
-
-```json
-{
-  "mcpServers": {
-    "ai-meeting-skill-guard": {
-      "command": "C:/Users/hp/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
-      "args": [
-        "C:/Users/hp/Documents/Codex/2026-07-20/lishuangqiang-ai-meeting-https-github-com/work/AI-Meeting/mcp/skill-guard/server.py"
-      ]
-    }
-  }
-}
-```
+Windows 上如果 `python` 不在 PATH 中，可以把 `command` 改成 `py`，`args` 前面加一个 `"-3"`。
 
 ## 推荐使用方式
 

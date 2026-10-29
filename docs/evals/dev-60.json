@@ -1,6 +1,6 @@
 {
   "humanReviewed": false,
-  "purpose": "Assistant-authored draft labels for human review. 20 distinct questions, 60 synthetic answers; this is not human-reviewed acceptance evidence.",
+  "purpose": "调试集：20 道题、60 条合成回答，用于调提示词；标签是初稿，未经人工复核。",
   "cases": [
     {
       "id": "v1-correct",
