@@ -183,18 +183,20 @@ followUpBudget = remaining - reserve - closing(60s) - buffer(60s)
 
 ### 7.3 每个位置崩溃会怎样
 
-| 崩溃位置 | 重试时的行为 |
-| --- | --- |
-| 写入①之前 | 什么都没保存，相当于第一次请求 |
-| ①之后、模型返回之前 | 找到同一个 pending，重新调用模型 |
-| 模型返回之后、②之前 | 同上，会重新调用一次模型（这是唯一可能重复付费的窗口） |
-| ②之后、③之前 | 直接复用保存的模型结果，不调模型，重新裁决并提交 |
-| ③之后、投影之前 | 按 requestId 找到已提交的 turn，补投影，返回原响应 |
+| 崩溃位置 | 重试时的行为 | 测试里的崩溃点 |
+| --- | --- | --- |
+| 写入①之前 | 什么都没保存，相当于第一次请求 | `BEFORE_PENDING_SAVE` |
+| ①之后、模型返回之前 | 找到同一个 pending，重新调用模型 | `AFTER_PENDING_SAVE`、`DURING_MODEL_CALL` |
+| 模型返回之后、②之前 | 同上，会重新调用一次模型（这是唯一可能重复付费的窗口） | `BEFORE_EVALUATION_SAVE` |
+| ②之后、③之前 | 直接复用保存的模型结果，不调模型，重新裁决并提交 | `AFTER_EVALUATION_SAVE`、`BEFORE_COMMIT` |
+| ③之后、投影之前 | 按 requestId 找到已提交的 turn，补投影，返回原响应 | `AFTER_COMMIT`、`DURING_PROJECTION` |
+
+这张表就是 `AnswerCrashMatrixTest`（内存存储）和 `AnswerCrashMatrixIT`（真实 MongoDB）：每个崩溃点让请求在那一步“进程退出”，再用同一个 requestId 重试，然后和一次没崩溃的运行对比响应、分数、题号、追问计数和模型调用次数。
 
 另外两种情况：
 
-- 同一题已经有一个 pending，又来了另一个 requestId 的回答（比如在另一个标签页提交），会被拒绝，提示用原请求重试，避免两份回答抢同一道题；
-- 两个请求同时到达时，第二个会等锁；锁等待超时就明确报错。就算锁失效，版本号也会拒绝基于旧数据的写入。
+- 同一题已经有一个 pending，又来了另一个 requestId 的回答（比如在另一个标签页提交），会被拒绝，提示用原请求重试，避免两份回答抢同一道题（`pendingAnswerBlocksADifferentRequestUntilTheOriginalIsRetried`）；
+- 两个请求同时到达时，第二个会等锁；锁等待超时就明确报错。就算锁失效，版本号也会拒绝基于旧数据的写入（`concurrentRetriesWithoutTheLockStillCommitOnce`：去掉锁，让两个重试读到同一版本后同时提交，只有一个成功）。
 
 结论：分数和题号推进是 exactly-once 的，模型调用是 at-least-once 的。
 
@@ -209,6 +211,8 @@ followUpBudget = remaining - reserve - closing(60s) - buffer(60s)
 - 失败时按 10s / 30s / 120s 退避，第 3 次失败标记 `FAILED`，用户可以手动重试。
 
 报告用已提交的 turn 拼成 Markdown（问答原文、证据、资料），不额外调用模型。
+
+worker 在领取后退出、发布前退出、卡住后被接管再醒来，这几种情况在 `ReportWorkerCrashTest` 里逐一模拟。
 
 ## 8. 错题与复习
 
@@ -237,7 +241,7 @@ followUpBudget = remaining - reserve - closing(60s) - buffer(60s)
 1. 先把会话文档改写成只保留身份信息的删除标记，正文、题目、报告当场清空；
 2. 再清理 Mongo 里的题目和轮次归档、MySQL 面试记录、Redis 派生键，以及错题中来自这场的来源和练习；
 3. 任何一步失败，后台每 10 秒补偿一次，直到 `deletionComplete=true`；
-4. 报告 worker 和其他读接口都会检查删除标记，不会再发布已删除的内容。
+4. 报告 worker 和其他读接口都会检查删除标记，不会再发布已删除的内容。worker 写错题之前，还会在错题锁里再查一次删除标记：如果会话锁失效，删除可能在 worker 运行到一半时就已经清理完了。
 
 同一个错题如果还有其他场次作为来源，会保留下来。供应商托管的文件（简历等）只清理本地引用。
 

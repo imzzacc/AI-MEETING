@@ -239,6 +239,10 @@ public class InterviewReviewService {
                 interviews.locked(
                         "mistake-" + id,
                         () -> {
+                            // If the session lock was lost, deletion may already have cleaned
+                            // up. It takes this same lock, so check its marker before writing.
+                            Session current = store.find(s.getId());
+                            if (current == null || current.isDeleted()) return null;
                             Mistake m = store.findMistake(id);
                             if (m != null && m.isDismissed()) return null;
                             if (m == null) {
