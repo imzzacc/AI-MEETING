@@ -15,6 +15,7 @@ export function useAudioTranscriptionTransport({
   onError,
 }: UseAudioTranscriptionTransportParams) {
   const transportRef = useRef<AudioToTextWebSocket | null>(null);
+  const rejectStartRef = useRef<((error: Error) => void) | null>(null);
   const onReplaceRef = useRef(onReplace);
   const onArchiveRef = useRef(onArchive);
   const onErrorRef = useRef(onError);
@@ -34,6 +35,8 @@ export function useAudioTranscriptionTransport({
   const disconnect = useCallback(() => {
     const transport = transportRef.current;
     transportRef.current = null;
+    rejectStartRef.current?.(new Error("Transcription startup cancelled"));
+    rejectStartRef.current = null;
 
     if (!transport) {
       return;
@@ -65,12 +68,22 @@ export function useAudioTranscriptionTransport({
     transport.onFinal = (text) => {
       onArchiveRef.current(text);
     };
-    transport.onError = (message) => {
-      onErrorRef.current(message);
-    };
-
     transportRef.current = transport;
-    transport.connect();
+    return new Promise<void>((resolve, reject) => {
+      rejectStartRef.current = reject;
+      transport.onReady = () => {
+        if (transportRef.current !== transport) return;
+        rejectStartRef.current = null;
+        resolve();
+      };
+      transport.onError = (message) => {
+        if (transportRef.current !== transport) return;
+        rejectStartRef.current = null;
+        reject(new Error(message));
+        onErrorRef.current(message);
+      };
+      transport.connect();
+    });
   }, [disconnect, userId]);
 
   const sendAudioChunk = useCallback((data: ArrayBuffer) => {

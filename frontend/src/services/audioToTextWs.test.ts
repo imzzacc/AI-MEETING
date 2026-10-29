@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/authToken", () => ({
   getAuthToken: vi.fn(() => "token"),
@@ -83,5 +83,84 @@ describe("AudioToTextWebSocket message handling", () => {
     });
 
     expect(onTranscription).toHaveBeenCalledWith("");
+  });
+});
+
+describe("AudioToTextWebSocket lifecycle", () => {
+  class FakeSocket {
+    static CONNECTING = 0;
+    static OPEN = 1;
+    static latest: FakeSocket;
+    readyState = 0;
+    send = vi.fn();
+    close = vi.fn();
+    onopen?: () => void;
+    onmessage?: (event: { data: string }) => void;
+    onclose?: (event: {
+      code: number;
+      reason: string;
+      wasClean: boolean;
+    }) => void;
+    constructor() {
+      FakeSocket.latest = this;
+    }
+    receive(type: string) {
+      this.onmessage?.({ data: JSON.stringify({ type }) });
+    }
+  }
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.stubGlobal("WebSocket", FakeSocket);
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it("sends start before audio and waits for server acknowledgement", () => {
+    const ws = new AudioToTextWebSocket("tester");
+    ws.onConnected = () => ws.sendCommand("start_transcription");
+    ws.onReady = vi.fn();
+    ws.connect();
+    const socket = FakeSocket.latest;
+    const pcm = new ArrayBuffer(1280);
+    ws.sendAudio(pcm);
+    socket.readyState = 1;
+    socket.onopen?.();
+    expect(socket.send).not.toHaveBeenCalled();
+    socket.receive("connected");
+    expect(socket.send).toHaveBeenCalledExactlyOnceWith(
+      JSON.stringify({ type: "start_transcription" }),
+    );
+    socket.receive("transcription_started");
+    expect(socket.send).toHaveBeenNthCalledWith(2, pcm);
+    expect(ws.onReady).toHaveBeenCalledOnce();
+    ws.disconnect();
+  });
+
+  it("reports a dropped established connection instead of leaving a fake listening state", () => {
+    const ws = new AudioToTextWebSocket("tester");
+    ws.onError = vi.fn();
+    ws.connect();
+    const socket = FakeSocket.latest;
+    socket.readyState = 1;
+    socket.onopen?.();
+    socket.onclose?.({ code: 1006, reason: "", wasClean: false });
+    expect(ws.onError).toHaveBeenCalledOnce();
+    ws.disconnect();
+  });
+
+  it("times out startup and ignores callbacks from a disposed connection", () => {
+    const ws = new AudioToTextWebSocket("tester");
+    ws.onError = vi.fn();
+    ws.connect();
+    const socket = FakeSocket.latest;
+    vi.advanceTimersByTime(10000);
+    expect(ws.onError).toHaveBeenCalledExactlyOnceWith(
+      "Transcription startup timed out",
+    );
+    expect(socket.close).toHaveBeenCalledOnce();
+    socket.onclose?.({ code: 1006, reason: "", wasClean: false });
+    expect(ws.onError).toHaveBeenCalledOnce();
   });
 });

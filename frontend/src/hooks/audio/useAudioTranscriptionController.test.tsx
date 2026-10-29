@@ -75,7 +75,7 @@ describe("useAudioTranscriptionController", () => {
     expect(streamState.stop).toHaveBeenCalled();
     expect(result.current.isRecording).toBe(false);
     expect(result.current.error).toBe(
-      "Unable to access microphone or connect to transcription",
+      "语音转写连接失败或已中断，请重试；已识别的文字会保留。",
     );
 
     await act(async () => {
@@ -100,7 +100,7 @@ describe("useAudioTranscriptionController", () => {
       expect(transportState.disconnect).toHaveBeenCalled();
       expect(streamState.stop).toHaveBeenCalled();
       expect(result.current.isRecording).toBe(false);
-      expect(result.current.error).toBe("socket broke");
+      expect(result.current.error).toContain("已中断");
     });
 
     await act(async () => {
@@ -145,6 +145,55 @@ describe("useAudioTranscriptionController", () => {
     await act(async () => {
       unmount();
     });
+  });
+
+  it("waits for transcription readiness before capturing audio and prevents duplicate starts", async () => {
+    let ready!: () => void;
+    transportState.connect.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        ready = resolve;
+      }),
+    );
+    const { result, unmount } = renderHook(() =>
+      useAudioTranscriptionController(currentUser),
+    );
+    let start!: Promise<void>;
+    act(() => {
+      start = result.current.startRecording();
+    });
+    expect(result.current.isStarting).toBe(true);
+    expect(streamState.start).not.toHaveBeenCalled();
+    await act(async () => {
+      await result.current.startRecording();
+    });
+    expect(transportState.connect).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      ready();
+      await start;
+    });
+    expect(result.current.isRecording).toBe(true);
+    expect(result.current.isStarting).toBe(false);
+    unmount();
+  });
+
+  it("preserves the configuration error when a failed connection cancels startup", async () => {
+    transportState.connect.mockImplementationOnce(async () => {
+      const message =
+        "Large-model realtime ASR requires appId/apiKey/apiSecret";
+      transportState.params?.onError(message);
+      throw new Error(message);
+    });
+    const { result, unmount } = renderHook(() =>
+      useAudioTranscriptionController(currentUser),
+    );
+    await act(async () => {
+      await result.current.startRecording();
+    });
+    expect(result.current.error).toContain("语音识别服务尚未配置");
+    expect(result.current.isStarting).toBe(false);
+    expect(result.current.isRecording).toBe(false);
+    expect(streamState.start).not.toHaveBeenCalled();
+    unmount();
   });
 
   it("merges partial and final transcription events through the reducer", async () => {
