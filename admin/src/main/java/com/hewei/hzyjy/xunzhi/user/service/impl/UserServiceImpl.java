@@ -42,7 +42,6 @@ import com.hewei.hzyjy.xunzhi.user.api.io.resp.UserPageRespDTO;
 import com.hewei.hzyjy.xunzhi.user.api.io.resp.UserRespDTO;
 import com.hewei.hzyjy.xunzhi.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
@@ -67,7 +66,6 @@ import static com.hewei.hzyjy.xunzhi.common.enums.UserErrorCodeEnum.USER_SAVE_ER
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
 
-    private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     private final RedissonClient redissonClient;
     private final StringRedisTemplate stringRedisTemplate;
 
@@ -86,25 +84,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public Boolean hasUsername(String username) {
-        return !userRegisterCachePenetrationBloomFilter.contains(username);
+        // Keep the historical API contract: true means available. A Bloom hit is
+        // only probabilistic and may outlive a database reset or rolled-back insert.
+        return !baseMapper.exists(Wrappers.lambdaQuery(UserDO.class)
+                .eq(UserDO::getUsername, username));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void register(UserRegisterReqDTO requestParam) {
-        if (!hasUsername(requestParam.getUsername())) {
-            throw new ClientException(USER_NAME_EXIST);
-        }
         RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
         if (!lock.tryLock()) {
-            throw new ClientException(USER_NAME_EXIST);
+            throw new ClientException("注册请求正在处理中，请稍后重试");
         }
         try {
+            if (!hasUsername(requestParam.getUsername())) {
+                throw new ClientException(USER_NAME_EXIST);
+            }
             int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
             if (inserted < 1) {
                 throw new ClientException(USER_SAVE_ERROR);
             }
-            userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
         } catch (DuplicateKeyException ex) {
             throw new ClientException(USER_EXIST);
         } finally {
@@ -138,7 +138,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                 .eq(UserDO::getDelFlag, 0);
         UserDO userDO = baseMapper.selectOne(queryWrapper);
         if (userDO == null) {
-            throw new ClientException("user does not exist");
+            throw new ClientException("用户名或密码错误，请检查后重试");
         }
 
         Map<Object, Object> hasLoginMap = stringRedisTemplate.opsForHash().entries(USER_LOGIN_KEY + requestParam.getUsername());
