@@ -5,7 +5,7 @@
 ## 1. 自动化测试
 
 ```bash
-docker run -d --name ai-meeting-mongo -p 127.0.0.1:28029:27017 mongo:8.0
+docker run -d --name ai-meeting-mongo -p 127.0.0.1:28029:27017 mongo:7.0
 ./mvnw -B -ntp clean verify                                   # 后端：单元测试 + 集成测试
 python3 -m unittest discover -s scripts -p 'test_*.py'          # 评测脚本自身的指标计算
 cd frontend && npm run check && npm run build                   # 前端：lint、类型检查、vitest

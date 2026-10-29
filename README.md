@@ -127,7 +127,7 @@ MySQL 初始化脚本在 `admin/src/main/resources/sql/`，首次创建数据卷
 ## 测试
 
 ```bash
-docker run -d --name ai-meeting-mongo -p 127.0.0.1:28029:27017 mongo:8.0   # 集成测试用
+docker run -d --name ai-meeting-mongo -p 127.0.0.1:28029:27017 mongo:7.0   # 集成测试用
 ./mvnw -B -ntp clean verify
 cd frontend && npm run check && npm run build
 ```
