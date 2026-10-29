@@ -6,7 +6,6 @@ on:
       - main
       - master
       - develop
-      - "codex/**"
       - "feature/**"
     paths-ignore:
       - "docs/**"
@@ -24,7 +23,7 @@ jobs:
     timeout-minutes: 20
     services:
       mongo:
-        image: mongo:8.0
+        image: mongo:7.0
         ports:
           - 28029:27017
         options: >-

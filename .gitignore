@@ -10,6 +10,9 @@ admin/src/main/resources/temp/
 *.temp
 uploads/
 coverage/
+node_modules/
+frontend/dist/
+__pycache__/
 .env
 .env.*
 !.env.example

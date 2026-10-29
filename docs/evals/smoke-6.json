@@ -1,6 +1,6 @@
 {
   "humanReviewed": false,
-  "purpose": "Assistant-authored synthetic regression cases, pending human review. Not the formal 20-question/60-answer acceptance dataset.",
+  "purpose": "冒烟用例：6 条合成回答，用于快速检查评分工作流的输出契约。",
   "cases": [
     {"id":"volatile-false-experience","topicId":"java.volatile","question":"请描述你实际使用 volatile 和 AtomicInteger 的场景，并比较性能。","answer":"volatile 能保证 i++ 整体是原子操作，并发自增不会丢失更新，因此无需 AtomicInteger 或 synchronized。我没有做过性能对比。","expectedStates":{"atomicity":["INCORRECT"]},"maxScore":60},
     {"id":"volatile-correct","topicId":"java.volatile","question":"volatile 是否能保证共享计数器 i++ 的并发正确性？","answer":"不能。volatile 提供可见性和相关顺序约束，但 i++ 包含读取、计算和写入，整体不是原子操作，并发执行可能丢失更新。应该用 AtomicInteger 的原子自增方法，或用同一把锁保护复合更新。","expectedStates":{"atomicity":["COVERED"]},"minScore":70},
